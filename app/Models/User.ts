@@ -53,7 +53,13 @@ export default class User extends BaseModel {
         .from(Env.get('DEFAULT_FROM_EMAIL'))
         .to(this.email)
         .subject('Please verify your email')
-        .htmlView('emails/auth/verify', { user: this, url, appName, appDomain, currentYear })
+        .htmlView('emails/auth/verify', {
+          user: this,
+          url,
+          appName,
+          appDomain,
+          currentYear,
+        })
     })
   }
 }

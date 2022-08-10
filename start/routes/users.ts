@@ -1,4 +1,5 @@
 import Route from '@ioc:Adonis/Core/Route'
+Route.resource('users', 'Users/UsersController')
 
 Route.group(() => {
   // registration and login logic
@@ -9,4 +10,4 @@ Route.group(() => {
   // verification logic
   // Route.post('/verify-email', 'users/EmailVerificationsController.index').as('verifyAccount')
   Route.get('/verify-email/:email', 'users/EmailVerificationsController.confirm').as('verifyEmail')
-}).prefix('api/v1/users/')
+}).prefix('/users/')

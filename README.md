@@ -1,6 +1,6 @@
-# FItIt BACKEND API
+# Nou One BACKEND API
 
-> Main Adonis js code base FitIt
+> Main Adonis js code base one
 
 1. [Requirements](#requirements)
 2. [Installation](#installing-on-local-machine)
