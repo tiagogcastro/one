@@ -33,3 +33,7 @@ Route.get('health', async ({ response }) => {
 Route.get('/', () => {
   return 'API Running'
 })
+
+Route.get('/home', () => {
+  return 'HOME'
+}).middleware('auth')
