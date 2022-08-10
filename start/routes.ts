@@ -23,17 +23,19 @@ import Route from '@ioc:Adonis/Core/Route'
 
 import './routes/users.ts'
 
-// check db connection
-Route.get('health', async ({ response }) => {
-  const report = await HealthCheck.getReport()
+Route.group(() => {
+  // check db connection
+  Route.get('health', async ({ response }) => {
+    const report = await HealthCheck.getReport()
 
-  return report.healthy ? response.ok(report) : response.badRequest(report)
-})
+    return report.healthy ? response.ok(report) : response.badRequest(report)
+  })
 
-Route.get('/', () => {
-  return 'API Running'
-})
+  Route.get('/', () => {
+    return 'API Running'
+  })
 
-Route.get('/home', () => {
-  return 'HOME'
-}).middleware('auth')
+  Route.get('/home', () => {
+    return 'HOME'
+  }).middleware('auth')
+}).prefix('/api')
