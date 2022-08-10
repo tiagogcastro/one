@@ -1,5 +1,6 @@
 import Route from '@ioc:Adonis/Core/Route'
-Route.resource('users', 'Users/UsersController')
+
+Route.resource('api/users', 'Users/UsersController')
 
 Route.group(() => {
   // registration and login logic
