@@ -99,7 +99,7 @@ const AuthProvider = (props: any) => {
         localStorage.setItem('@nou-one:token', token);
 
         setData({ user: userFormatted });
-        window.location.href = '/';
+        //window.location.href = '/';
       })
       .catch((erro) => console.log(erro));
   }, []);

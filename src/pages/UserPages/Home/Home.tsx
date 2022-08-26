@@ -1,9 +1,14 @@
 import React from 'react';
 
-const Home: React.FC = () => (
-  <div>
-    <h1>Home</h1>
-  </div>
-);
+import { useAuth } from '../../../hooks/auth';
 
+const Home: React.FC = () => {
+  const { signOut } = useAuth();
+  return (
+    <div>
+      <h1>Home</h1>
+      <button onClick={() => signOut()}>Logout</button>
+    </div>
+  );
+};
 export default Home;

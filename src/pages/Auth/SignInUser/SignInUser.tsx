@@ -1,13 +1,9 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { FaUser } from 'react-icons/fa';
 import { MdEmail, MdLock } from 'react-icons/md';
-import { useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
 
-import brazilflagImg from '../../../assets/brazilflag.png';
-import euaflagImg from '../../../assets/euaflag.png';
 import { useAuth } from '../../../hooks/auth';
-import { useTranslation } from '../../../hooks/translation';
 import {
   Container,
   Content,
@@ -18,11 +14,7 @@ import {
   Input,
   SignInButton,
   Title,
-  TranslateButton,
-  TranslateContainer,
-  TranslateImage,
 } from './styles';
-import translatedContent from './translatedcontent';
 
 interface ISignFormData {
   email: string;
@@ -33,12 +25,6 @@ const SignInUser: React.FC = () => {
   const [loading, setLoading] = useState(false);
 
   const { signIn } = useAuth();
-  const { translation, changeTranslation } = useTranslation();
-  let navigate = useNavigate();
-  console.log(signIn);
-  const translated = useMemo(() => {
-    return translation === 'en-us' ? translatedContent.en_US : translatedContent.pt_BR;
-  }, [translation]);
 
   const handleSubmit = useCallback(
     async (data: ISignFormData) => {
@@ -47,9 +33,9 @@ const SignInUser: React.FC = () => {
 
         const schema = Yup.object().shape({
           email: Yup.string()
-            .required(translated.alert_set_email_and_password)
-            .email(translated.alert_invalid_email),
-          password: Yup.string().required(translated.alert_set_email_and_password),
+            .required('Você deve informar e-mail e senha!')
+            .email('E-mail inválido'),
+          password: Yup.string().required('Você deve informar senha'),
         });
 
         await schema.validate(data);
@@ -57,7 +43,7 @@ const SignInUser: React.FC = () => {
         const { email, password } = data;
         await signIn({ email, password });
 
-        navigate('/home');
+        //navigate('/home');
       } catch (error: any) {
         if (error instanceof Yup.ValidationError) {
           console.log(error.errors[0], 'info');
@@ -65,31 +51,31 @@ const SignInUser: React.FC = () => {
           console.log(error);
         }
       } finally {
-        setLoading(false);
+        //setLoading(false);
       }
     },
-    [history, signIn, translated],
+    [history, signIn],
   );
 
   return (
     <Container>
       <Content>
         <Form onSubmit={handleSubmit}>
-          <Title>Entrar</Title>
+          <Title>Login</Title>
 
           <Input
-            label={translated.label_email}
+            label={'E-mail'}
             name="email"
             type="email"
-            placeholder={translated.input_placeholder_email}
+            placeholder={'E-mail'}
             icon={MdEmail}
             required
           />
           <Input
-            label={translated.label_password}
+            label={'Senha'}
             name="password"
             type="password"
-            placeholder={translated.input_placeholder_password}
+            placeholder={'Senha'}
             icon={MdLock}
             required
           />
@@ -98,37 +84,17 @@ const SignInUser: React.FC = () => {
             <h1>Carregando</h1>
           ) : (
             <SignInButton color="#fff" type="submit">
-              {translated.button_go}
+              Entrar
             </SignInButton>
           )}
 
-          <ForgotPassword to="/forgot-password">
-            {translated.label_password_forgot}
-          </ForgotPassword>
-
-          <TranslateContainer>
-            <TranslateButton
-              type="button"
-              actived={translation === 'pt-br'}
-              onClick={() => changeTranslation('pt-br')}
-            >
-              <TranslateImage src={brazilflagImg} />
-            </TranslateButton>
-
-            <TranslateButton
-              type="button"
-              actived={translation === 'en-us'}
-              onClick={() => changeTranslation('en-us')}
-            >
-              <TranslateImage src={euaflagImg} />
-            </TranslateButton>
-          </TranslateContainer>
+          <ForgotPassword to="/forgot-password">Esqueceu a senha?</ForgotPassword>
         </Form>
 
         <CreateAccountContainer>
           <CreateAccountLink to="/signup">
             <FaUser />
-            {translated.button_label_register}
+            Criar conta
           </CreateAccountLink>
         </CreateAccountContainer>
       </Content>
