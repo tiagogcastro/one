@@ -34,7 +34,11 @@ export default class AuthController {
       const token = await auth.use('api').attempt(email, password, {
         expiresIn: '24hours',
       })
-      return token.toJSON()
+      const userData = await User.findBy('email', email)
+      return {
+        token: token.toJSON(),
+        user: { ...userData?.serialize(), profile: { name: 'cliente' } },
+      }
     } catch {
       return response
         .status(400)
