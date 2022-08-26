@@ -1,11 +1,8 @@
 import React from 'react';
 
 import { AuthProvider } from './auth';
+// import { TranslateProvider } from './translation';
 
-interface IProps {
-  name: string;
-}
-
-const AppProvider: React.FC<IProps> = () => <AuthProvider></AuthProvider>;
+const AppProvider = (props: any) => <AuthProvider>{props.children}</AuthProvider>;
 
 export default AppProvider;

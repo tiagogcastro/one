@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
-import SignIn from '../pages/Auth/SignIn/SignIn';
+import SignIn from '../pages/Auth/SignInUser/SignInUser';
 
 // import Layout from '../components/AppLayoutAdmin';
 const AdminRoutes: React.FC = () => {

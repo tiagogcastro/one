@@ -48,10 +48,10 @@ interface IApiResponse {
 
 const AuthContext = createContext<IAuthContextData>({} as IAuthContextData);
 
-const AuthProvider = () => {
+const AuthProvider = (props: any) => {
   const [data, setData] = useState<IAuthState>(() => {
-    const user = localStorage.getItem('@bvspparts:user');
-    const token = localStorage.getItem('@bvspparts:token');
+    const user = localStorage.getItem('@nou-one:user');
+    const token = localStorage.getItem('@nou-one:token');
 
     if (token && user) {
       // Inserindo e definindo o token para todas as requisições.
@@ -79,11 +79,12 @@ const AuthProvider = () => {
       });
 
     await api
-      .post('sessions', {
+      .post('users/login', {
         email,
         password,
       })
       .then((userData: IApiResponse) => {
+        console.log(userData);
         const { user, token }: IResponseSession = userData.data;
 
         api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
@@ -94,30 +95,29 @@ const AuthProvider = () => {
           environment: 'default',
         };
 
-        localStorage.setItem('@bvspparts:user', JSON.stringify(userFormatted));
-        localStorage.setItem('@bvspparts:token', token);
+        localStorage.setItem('@nou-one:user', JSON.stringify(userFormatted));
+        localStorage.setItem('@nou-one:token', token);
 
         setData({ user: userFormatted });
         window.location.href = '/';
       })
-      .catch(() => console.log('Usuário e/ou senha inválidos!', 'info'));
+      .catch((erro) => console.log(erro));
   }, []);
 
   const signOut = useCallback(() => {
-    localStorage.removeItem('@bvspparts:user');
+    localStorage.removeItem('@nou-one:user');
     setData({} as IAuthState);
   }, []);
 
   return (
     <AuthContext.Provider value={{ user: data.user, setData, signIn, signOut }}>
-      {}
+      {props.children}
     </AuthContext.Provider>
   );
 };
 
 function useAuth(): IAuthContextData {
   const context = useContext(AuthContext);
-
   return context;
 }
 
