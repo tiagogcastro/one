@@ -1,8 +1,11 @@
+import { Box as MuiBox, Button, Paper as MuiPaper } from '@mui/material';
+import { styled as MStyled } from '@mui/system';
 import { Form as Unform } from '@unform/web';
 import { Link } from 'react-router-dom';
-import styled, { keyframes } from 'styled-components';
+import { keyframes } from 'styled-components';
+import styled from 'styled-components';
 
-import Button from '../../../components/Form/Button';
+//import Button from '../../../components/Form/Button';
 import TextInput from '../../../components/Form/TextInput';
 
 interface ITranslateProps {
@@ -23,33 +26,16 @@ const animate = keyframes`
     }
 `;
 
-export const Container = styled.div`
-  height: 100vh;
+export const Container = MStyled(MuiBox)({
+  height: '100vh',
+  backgroundColor: '#222',
+  color: '#ddd',
+}) as typeof MuiBox;
 
-  display: flex;
-  flex-direction: column;
-  flex: 1;
+export const Paper = MStyled(MuiPaper)({}) as typeof MuiPaper;
 
-  justify-content: center;
-  align-items: flex-start;
-
-  background-repeat: none;
-  background-size: cover;
-
-  overflow-y: scroll;
-
-  @media (max-width: 700px) {
-    align-items: center;
-  }
-`;
-
-export const Content = styled.div`
-  margin-left: 100px;
-
-  @media (max-width: 700px) {
-    margin: 0;
-  }
-`;
+export const Content = MStyled(MuiBox)({}) as typeof MuiBox;
+//margin-left: 100px;
 
 export const Form = styled(Unform)`
   min-width: 370px;
@@ -77,12 +63,9 @@ export const Title = styled.h1`
   }
 `;
 
-export const SignInButton = styled(Button)`
-  width: 100%;
-
-  margin-top: 30px;
-  padding: 13px 10px;
-`;
+export const SignInButton = MStyled(Button)({
+  color: '#eee',
+}) as typeof Button;
 
 export const Input = styled(TextInput).attrs({
   containerCustomStyle: {
