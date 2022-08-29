@@ -1,4 +1,5 @@
 import React, { createContext, useCallback, useContext, useState } from 'react';
+import { toast } from 'react-toastify';
 
 import api from '../services/api';
 
@@ -76,6 +77,9 @@ const AuthProvider = (props: any) => {
       })
       .then((response) => {
         return response.country_code;
+      })
+      .catch((error) => {
+        toast.error(error.message);
       });
 
     await api
@@ -101,12 +105,13 @@ const AuthProvider = (props: any) => {
         setData({ user: userFormatted });
         //window.location.href = '/';
       })
-      .catch((erro) => console.log(erro));
+      .catch((error) => toast.error(error.message));
   }, []);
 
   const signOut = useCallback(() => {
     localStorage.removeItem('@nou-one:user');
     setData({} as IAuthState);
+    toast.success('Logout executado com sucesso');
   }, []);
 
   return (

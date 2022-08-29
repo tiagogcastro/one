@@ -1,3 +1,6 @@
+import 'react-toastify/dist/ReactToastify.css';
+
+import { ToastContainer } from 'react-toastify';
 import { ThemeProvider } from 'styled-components';
 
 import AppProvider from './hooks';
@@ -9,6 +12,7 @@ function App() {
   return (
     <ThemeProvider theme={lightCustom}>
       <GlobalStyles />
+      <ToastContainer />
       <AppProvider>
         <AppRoutes />
       </AppProvider>

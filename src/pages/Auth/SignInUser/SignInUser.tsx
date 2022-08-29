@@ -1,17 +1,24 @@
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import {
   Avatar,
   Checkbox,
   CssBaseline,
+  FormControl,
   FormControlLabel,
   Grid,
+  IconButton,
+  InputAdornment,
+  InputLabel,
   LinearProgress,
   Link,
+  OutlinedInput,
   Stack,
   TextField,
   Typography,
 } from '@mui/material';
 import React, { useCallback, useState } from 'react';
+import { toast } from 'react-toastify';
 import * as Yup from 'yup';
 
 import NouBg from '../../../assets/noubg.png';
@@ -22,6 +29,7 @@ interface ISignFormData {
   email: string;
   password: string;
   remember: boolean;
+  showPassword: boolean;
 }
 
 function Copyright(props: any) {
@@ -43,6 +51,7 @@ const SignInUser: React.FC = () => {
     email: '',
     password: '',
     remember: false,
+    showPassword: false,
   } as ISignFormData);
 
   const { signIn } = useAuth();
@@ -50,11 +59,12 @@ const SignInUser: React.FC = () => {
   const handleSubmit = useCallback(
     async (data: ISignFormData) => {
       try {
-        console.log(data);
         setLoading(true);
         const schema = Yup.object().shape({
-          email: Yup.string().required().email(),
-          password: Yup.string().required(),
+          email: Yup.string()
+            .required('Você deve informar um e-mail')
+            .email('Formato de e-mail inválido'),
+          password: Yup.string().required('Você deve informar uma senha'),
         });
 
         await schema.validate(data);
@@ -65,9 +75,9 @@ const SignInUser: React.FC = () => {
         //navigate('/home');
       } catch (error: any) {
         if (error instanceof Yup.ValidationError) {
-          console.log(error.errors[0], 'info');
+          toast.error(error.errors[0]);
         } else {
-          console.log(error);
+          toast.error(error);
         }
       } finally {
         setLoading(false);
@@ -137,21 +147,41 @@ const SignInUser: React.FC = () => {
                 label="E-mail"
                 value={formData.email}
                 fullWidth
-                onChange={(e) => {
-                  setFormData({ ...formData, email: e.target.value });
-                  console.log(formData);
-                }}
+                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
               />
 
-              <TextField
-                id="password"
-                label="Senha"
-                value={formData.password}
-                fullWidth
-                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-              />
+              <FormControl sx={{ m: 1 }} fullWidth variant="outlined">
+                <InputLabel htmlFor="outlined-adornment-password">Senha</InputLabel>
+                <OutlinedInput
+                  id="password"
+                  type={formData.showPassword ? 'text' : 'password'}
+                  value={formData.password}
+                  onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                  endAdornment={
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={() => {
+                          setFormData({
+                            ...formData,
+                            showPassword: !formData.showPassword,
+                          });
+                        }}
+                        // onMouseDown={handleMouseDownPassword}
+                        // edge="end"
+                      >
+                        {formData.showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  }
+                  label="Senha"
+                />
+              </FormControl>
+
               {loading ? (
-                <LinearProgress sx={{ height: '5px', width: '200px' }} />
+                <LinearProgress
+                  sx={{ margin: '18.625px', height: '5px', width: '200px' }}
+                />
               ) : (
                 <SignInButton
                   variant="contained"
