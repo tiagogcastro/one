@@ -1,4 +1,5 @@
 import React, { createContext, useCallback, useContext, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import api from '../services/api';
@@ -14,6 +15,7 @@ interface IUser {
   city_state: string;
   company: string;
   name: string;
+  lastname: string;
   email: string;
   telephone: string;
   profile: {
@@ -24,9 +26,21 @@ interface IUser {
   environment: string;
 }
 
-interface ISignInCredentials {
+export interface ISignInCredentials {
   email: string;
   password: string;
+  showPassword: boolean;
+  remember: boolean;
+}
+
+export interface ISignUpCredentials {
+  name: string;
+  lastname: string;
+  username: string;
+  email: string;
+  password: string;
+  passwordConfirmation: string;
+  showPassword: boolean;
 }
 
 interface IResponseSession {
@@ -38,6 +52,8 @@ interface IAuthContextData {
   user: IUser;
   // eslint-disable-next-line no-unused-vars
   signIn(credentials: ISignInCredentials): Promise<void>;
+  // eslint-disable-next-line no-unused-vars
+  signUp(credentials: ISignUpCredentials): Promise<void>;
   signOut(): void;
   // eslint-disable-next-line no-unused-vars
   setData(data: IAuthState): void;
@@ -67,6 +83,35 @@ const AuthProvider = (props: any) => {
 
     return {} as IAuthState;
   });
+
+  const signUp = useCallback(
+    async ({
+      name,
+      lastname,
+      username,
+      email,
+      password,
+      passwordConfirmation,
+    }: ISignUpCredentials) => {
+      await api
+        .post('users/register', {
+          name,
+          lastname,
+          username,
+          email,
+          password,
+          password_confirmation: passwordConfirmation,
+        })
+        .then((apiResponse: IApiResponse) => {
+          const { success } = apiResponse.data;
+          if (success != null) {
+            toast.success('Usuário criado com sucesso!');
+          }
+        })
+        .catch((error) => toast.error(error.message));
+    },
+    [],
+  );
 
   const signIn = useCallback(async ({ email, password }: ISignInCredentials) => {
     const countryCode: string = await fetch(
@@ -115,7 +160,7 @@ const AuthProvider = (props: any) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user: data.user, setData, signIn, signOut }}>
+    <AuthContext.Provider value={{ user: data.user, setData, signIn, signUp, signOut }}>
       {props.children}
     </AuthContext.Provider>
   );

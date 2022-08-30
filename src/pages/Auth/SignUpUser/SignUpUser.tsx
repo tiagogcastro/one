@@ -2,10 +2,8 @@ import { Visibility, VisibilityOff } from '@mui/icons-material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import {
   Avatar,
-  Checkbox,
   CssBaseline,
   FormControl,
-  FormControlLabel,
   Grid,
   IconButton,
   InputAdornment,
@@ -18,12 +16,13 @@ import {
   Typography,
 } from '@mui/material';
 import React, { useCallback, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import * as Yup from 'yup';
 
 import NouBg from '../../../assets/noubg.png';
-import { ISignInCredentials, useAuth } from '../../../hooks/auth';
-import { Container, Paper, SignInButton } from './styles';
+import { ISignUpCredentials, useAuth } from '../../../hooks/auth';
+import { Container, Paper, SignUpButton } from './styles';
 
 function Copyright(props: any) {
   return (
@@ -38,34 +37,60 @@ function Copyright(props: any) {
   );
 }
 
-const SignInUser: React.FC = () => {
+const SignUpUser: React.FC = () => {
   const [loading, setLoading] = useState(false);
-  const [formData, setFormData] = useState<ISignInCredentials>({
+  const [formData, setFormData] = useState<ISignUpCredentials>({
+    name: '',
+    lastname: '',
+    username: '',
     email: '',
     password: '',
-    remember: false,
+    passwordConfirmation: '',
     showPassword: false,
-  } as ISignInCredentials);
+  } as ISignUpCredentials);
 
-  const { signIn } = useAuth();
+  const { signUp } = useAuth();
+
+  let navigate = useNavigate();
 
   const handleSubmit = useCallback(
-    async (data: ISignInCredentials) => {
+    async (data: ISignUpCredentials) => {
       try {
         setLoading(true);
         const schema = Yup.object().shape({
+          name: Yup.string().required('Você deve informar um e-mail'),
+          lastname: Yup.string().required('Você deve informar um e-mail'),
           email: Yup.string()
             .required('Você deve informar um e-mail')
             .email('Formato de e-mail inválido'),
+          username: Yup.string().required('Você deve informar um e-mail'),
           password: Yup.string().required('Você deve informar uma senha'),
+
+          // passwordConfirmation: ,
         });
 
         await schema.validate(data);
 
-        const { email, password, showPassword, remember } = data;
-        await signIn({ email, password, showPassword, remember });
+        const {
+          name,
+          lastname,
+          username,
+          email,
+          password,
+          passwordConfirmation,
+          showPassword,
+        } = data;
+        await signUp({
+          name,
+          lastname,
+          username,
+          email,
+          password,
+          passwordConfirmation,
+          showPassword,
+        });
 
-        //navigate('/home');
+        navigate('/');
       } catch (error: any) {
         if (error instanceof Yup.ValidationError) {
           toast.error(error.errors[0]);
@@ -76,7 +101,7 @@ const SignInUser: React.FC = () => {
         setLoading(false);
       }
     },
-    [signIn],
+    [signUp],
   );
 
   return (
@@ -125,7 +150,7 @@ const SignInUser: React.FC = () => {
               <LockOutlinedIcon />
             </Avatar>
             <Typography component="h1" variant="h5">
-              Login na plataforma One
+              Crie sua conta One
             </Typography>
             <Stack
               rowGap={2}
@@ -136,6 +161,21 @@ const SignInUser: React.FC = () => {
               }}
             >
               <TextField
+                id="name"
+                label="Nome"
+                value={formData.name}
+                fullWidth
+                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              />
+              <TextField
+                id="lastname"
+                label="Sobrenome"
+                value={formData.lastname}
+                fullWidth
+                onChange={(e) => setFormData({ ...formData, lastname: e.target.value })}
+              />
+
+              <TextField
                 id="email"
                 label="E-mail"
                 value={formData.email}
@@ -143,7 +183,15 @@ const SignInUser: React.FC = () => {
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
               />
 
-              <FormControl sx={{ m: 1 }} fullWidth variant="outlined">
+              <TextField
+                id="username"
+                label="Nome de usuário"
+                value={formData.username}
+                fullWidth
+                onChange={(e) => setFormData({ ...formData, username: e.target.value })}
+              />
+
+              <FormControl fullWidth variant="outlined">
                 <InputLabel htmlFor="outlined-adornment-password">Senha</InputLabel>
                 <OutlinedInput
                   id="password"
@@ -160,8 +208,6 @@ const SignInUser: React.FC = () => {
                             showPassword: !formData.showPassword,
                           });
                         }}
-                        // onMouseDown={handleMouseDownPassword}
-                        // edge="end"
                       >
                         {formData.showPassword ? <VisibilityOff /> : <Visibility />}
                       </IconButton>
@@ -171,42 +217,56 @@ const SignInUser: React.FC = () => {
                 />
               </FormControl>
 
+              <FormControl fullWidth variant="outlined">
+                <InputLabel htmlFor="outlined-adornment-password">
+                  Confirmar Senha
+                </InputLabel>
+                <OutlinedInput
+                  id="password-confirmation"
+                  type={formData.showPassword ? 'text' : 'password'}
+                  value={formData.passwordConfirmation}
+                  onChange={(e) =>
+                    setFormData({ ...formData, passwordConfirmation: e.target.value })
+                  }
+                  endAdornment={
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={() => {
+                          setFormData({
+                            ...formData,
+                            showPassword: !formData.showPassword,
+                          });
+                        }}
+                      >
+                        {formData.showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  }
+                  label="Confirmar Senha"
+                />
+              </FormControl>
               {loading ? (
                 <LinearProgress
                   sx={{ margin: '18.625px', height: '5px', width: '200px' }}
                 />
               ) : (
-                <SignInButton
+                <SignUpButton
                   variant="contained"
                   size="large"
                   type="button"
                   onClick={() => handleSubmit(formData)}
                   fullWidth
                 >
-                  Entrar
-                </SignInButton>
+                  Criar conta
+                </SignUpButton>
               )}
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    value={formData.remember}
-                    color="primary"
-                    onClick={() =>
-                      setFormData({ ...formData, remember: !formData.remember })
-                    }
-                  />
-                }
-                label="Salvar dados"
-              />
+
               <Grid container>
                 <Grid item xs>
-                  <Link href="/forgot-password" variant="body2">
-                    Esqueci a senha
-                  </Link>
-                </Grid>
-                <Grid item>
-                  <Link href="/signup" variant="body2">
-                    {'Criar conta'}
+                  Já possui uma conta?{' '}
+                  <Link href="/" variant="body2">
+                    Faça Login
                   </Link>
                 </Grid>
               </Grid>
@@ -219,4 +279,4 @@ const SignInUser: React.FC = () => {
   );
 };
 
-export default SignInUser;
+export default SignUpUser;
