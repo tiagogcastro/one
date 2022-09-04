@@ -1,5 +1,4 @@
 import React, { createContext, useCallback, useContext, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import api from '../services/api';
@@ -105,7 +104,8 @@ const AuthProvider = (props: any) => {
         .then((apiResponse: IApiResponse) => {
           const { success } = apiResponse.data;
           if (success != null) {
-            toast.success('Usuário criado com sucesso!');
+            return { success };
+            //toast.success('Usuário criado com sucesso!');
           }
         })
         .catch((error) => toast.error(error.message));

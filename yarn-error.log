@@ -1,5 +1,5 @@
 Arguments: 
-  C:\Program Files\nodejs\node.exe C:\Users\rwtum\AppData\Roaming\npm\node_modules\yarn\bin\yarn.js add @material-ui/core/styles -D
+  C:\Program Files\nodejs\node.exe C:\Users\rwtum\AppData\Roaming\npm\node_modules\yarn\bin\yarn.js add @types/react-reveal
 
 PATH: 
   C:\Program Files\Oculus\Support\oculus-runtime;C:\Program Files (x86)\VMware\VMware Workstation\bin\;C:\Users\rwtum\AppData\Local\Programs\Python\Python310\Scripts\;C:\Users\rwtum\AppData\Local\Programs\Python\Python310\;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\iCLS\;C:\Program Files\Intel\Intel(R) Management Engine Components\iCLS\;C:\TwinCAT\Common64;C:\TwinCAT\Common32;C:\Python39\Scripts\;C:\Python39\;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\Git\cmd;C:\ProgramData\chocolatey\bin;C:\Program Files\NVIDIA Corporation\NVIDIA NvDLISR;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\IPT;C:\Program Files\Intel\Intel(R) Management Engine Components\IPT;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\dotnet\;C:\Users\rwtum\AppData\Roaming\nvm;C:\Program Files\nodejs;C:\Program Files\nodejs\;C:\Program Files\Intel\Intel(R) Memory and Storage Tool\;C:\Program Files (x86)\dotnet\;C:\Users\rwtum\AppData\Local\Microsoft\WindowsApps;C:\Program Files (x86)\Common Files\Hilscher GmbH\TLRDecode;C:\Users\rwtum\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\rwtum\.dotnet\tools;C:\Users\rwtum\AppData\Roaming\nvm;C:\Program Files\nodejs;C:\Users\rwtum\AppData\Roaming\npm
@@ -14,8 +14,8 @@ Platform:
   win32 x64
 
 Trace: 
-  Error: https://registry.yarnpkg.com/@material-ui%2fcore/styles: Request "https://registry.yarnpkg.com/@material-ui%2fcore/styles" returned a 405
-      at Request.params.callback [as _callback] (C:\Users\rwtum\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:67038:18)
+  Error: https://registry.yarnpkg.com/@types%2freact-reveal: Not found
+      at Request.params.callback [as _callback] (C:\Users\rwtum\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:67029:18)
       at Request.self.callback (C:\Users\rwtum\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:140883:22)
       at Request.emit (node:events:390:28)
       at Request.<anonymous> (C:\Users\rwtum\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:141855:10)
@@ -28,60 +28,63 @@ Trace:
 
 npm manifest: 
   {
-      "name": "nou-one",
-      "version": "0.0.0",
-      "scripts": {
-          "dev": "vite",
-          "build": "tsc && vite build",
-          "serve": "vite preview",
-          "lint:fix": "eslint ./src --ext .jsx,.js,.ts,.tsx --quiet --fix --ignore-path ./.gitignore",
-          "lint:format": "prettier  --loglevel warn --write \"./**/*.{js,jsx,ts,tsx,css,md,json}\" ",
-          "lint": "yarn lint:format && yarn lint:fix ",
-          "type-check": "tsc"
-      },
-      "dependencies": {
-          "@emotion/react": "^11.10.0",
-          "@emotion/styled": "^11.10.0",
-          "@mui/icons-material": "^5.10.2",
-          "@mui/material": "^5.10.2",
-          "@mui/styled-engine": "npm:@mui/styled-engine-sc@latest",
-          "@mui/styled-engine-sc": "^5.10.1",
-          "@unform/core": "^2.1.6",
-          "@unform/web": "^2.1.6",
-          "axios": "^0.27.2",
-          "react": "^17.0.2",
-          "react-dom": "^17.0.2",
-          "react-icons": "^4.4.0",
-          "react-router-dom": "^6.3.0",
-          "styled-components": "^5.3.5",
-          "unform": "^1.2.3",
-          "yup": "^0.32.11"
-      },
-      "devDependencies": {
-          "@types/react": "^18.0.17",
-          "@types/react-dom": "^17.0.11",
-          "@types/styled-components": "^5.1.26",
-          "@types/yup": "^0.32.0",
-          "@typescript-eslint/eslint-plugin": "^5.10.2",
-          "@typescript-eslint/parser": "^5.10.2",
-          "@vitejs/plugin-react": "^1.3.2",
-          "eslint": "^8.8.0",
-          "eslint-config-prettier": "^8.3.0",
-          "eslint-plugin-import": "^2.25.4",
-          "eslint-plugin-jsx-a11y": "^6.5.1",
-          "eslint-plugin-prettier": "^4.0.0",
-          "eslint-plugin-react": "^7.28.0",
-          "eslint-plugin-simple-import-sort": "^7.0.0",
-          "pre-commit": "^1.2.2",
-          "prettier": "^2.5.1",
-          "typescript": "^4.5.5",
-          "vite": "^2.9.12"
-      },
-      "resolutions": {
-          "@mui/styled-engine": "npm:@mui/styled-engine-sc@latest"
-      },
-      "pre-commit": "lint",
-      "license": "MIT"
+    "name": "nou-one",
+    "version": "0.0.0",
+    "scripts": {
+      "dev": "vite",
+      "build": "tsc && vite build",
+      "serve": "vite preview",
+      "lint:fix": "eslint ./src --ext .jsx,.js,.ts,.tsx --quiet --fix --ignore-path ./.gitignore",
+      "lint:format": "prettier  --loglevel warn --write \"./**/*.{js,jsx,ts,tsx,css,md,json}\" ",
+      "lint": "yarn lint:format && yarn lint:fix ",
+      "type-check": "tsc"
+    },
+    "dependencies": {
+      "@emotion/react": "^11.10.0",
+      "@emotion/styled": "^11.10.0",
+      "@mui/icons-material": "^5.10.2",
+      "@mui/material": "^5.10.2",
+      "@mui/styled-engine": "npm:@mui/styled-engine-sc@latest",
+      "@mui/styled-engine-sc": "^5.10.1",
+      "@types/react-toastify": "^4.1.0",
+      "@unform/core": "^2.1.6",
+      "@unform/web": "^2.1.6",
+      "axios": "^0.27.2",
+      "react": "^17.0.2",
+      "react-dom": "^17.0.2",
+      "react-icons": "^4.4.0",
+      "react-reveal": "^1.2.2",
+      "react-router-dom": "^6.3.0",
+      "styled-components": "^5.3.5",
+      "unform": "^1.2.3",
+      "yup": "^0.32.11"
+    },
+    "devDependencies": {
+      "@types/material-ui": "^0.21.12",
+      "@types/react": "^18.0.17",
+      "@types/react-dom": "^17.0.11",
+      "@types/styled-components": "^5.1.26",
+      "@types/yup": "^0.32.0",
+      "@typescript-eslint/eslint-plugin": "^5.10.2",
+      "@typescript-eslint/parser": "^5.10.2",
+      "@vitejs/plugin-react": "^1.3.2",
+      "eslint": "^8.8.0",
+      "eslint-config-prettier": "^8.3.0",
+      "eslint-plugin-import": "^2.25.4",
+      "eslint-plugin-jsx-a11y": "^6.5.1",
+      "eslint-plugin-prettier": "^4.0.0",
+      "eslint-plugin-react": "^7.28.0",
+      "eslint-plugin-simple-import-sort": "^7.0.0",
+      "pre-commit": "^1.2.2",
+      "prettier": "^2.5.1",
+      "typescript": "^4.5.5",
+      "vite": "^2.9.12"
+    },
+    "resolutions": {
+      "@mui/styled-engine": "npm:@mui/styled-engine-sc@latest"
+    },
+    "pre-commit": "lint",
+    "license": "MIT"
   }
 
 yarn manifest: 
@@ -589,6 +592,7 @@ Lockfile:
       prop-types "^15.8.1"
   
   "@mui/styled-engine-sc@^5.10.1", "@mui/styled-engine@^5.10.2", "@mui/styled-engine@npm:@mui/styled-engine-sc@latest":
+    name "@mui/styled-engine"
     version "5.10.1"
     resolved "https://registry.yarnpkg.com/@mui/styled-engine-sc/-/styled-engine-sc-5.10.1.tgz#b8dc43365db4adc1b8626f7d2a1323ac6ea61cea"
     integrity sha512-SCaZYUUofRDsA35zRIyDy7yzF7M1efaPeTo/TtyZIgVq5raWuiOXvKOo4Bus+mnpT/3H+I5tsR2rlozWL5tQdA==
@@ -683,6 +687,14 @@ Lockfile:
     resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.184.tgz#23f96cd2a21a28e106dc24d825d4aa966de7a9fe"
     integrity sha512-RoZphVtHbxPZizt4IcILciSWiC6dcn+eZ8oX9IWEYfDMcocdd42f7NPI6fQj+6zI8y4E0L7gu2pcZKLGTRaV9Q==
   
+  "@types/material-ui@^0.21.12":
+    version "0.21.12"
+    resolved "https://registry.yarnpkg.com/@types/material-ui/-/material-ui-0.21.12.tgz#208e8b7e49a545bb704fa7e865986afde1b33384"
+    integrity sha512-rBY3iOr5LISKDLAYo3229R79xIPPKSOL2c7FzAFn5dUj38Oe7rQldYedHWsYmkJUeboE9Ipad7ppyJwBzXxrMw==
+    dependencies:
+      "@types/react" "*"
+      "@types/react-addons-linked-state-mixin" "*"
+  
   "@types/parse-json@^4.0.0":
     version "4.0.0"
     resolved "https://registry.yarnpkg.com/@types/parse-json/-/parse-json-4.0.0.tgz#2f8bb441434d163b35fb8ffdccd7138927ffb8c0"
@@ -692,6 +704,13 @@ Lockfile:
     version "15.7.5"
     resolved "https://registry.yarnpkg.com/@types/prop-types/-/prop-types-15.7.5.tgz#5f19d2b85a98e9558036f6a3cacc8819420f05cf"
     integrity sha512-JCB8C6SnDoQf0cNycqd/35A7MjcnK+ZTqE7judS6o7utxUCg6imJg3QK2qzHKszlTjcj2cn+NwMB2i96ubpj7w==
+  
+  "@types/react-addons-linked-state-mixin@*":
+    version "0.14.22"
+    resolved "https://registry.yarnpkg.com/@types/react-addons-linked-state-mixin/-/react-addons-linked-state-mixin-0.14.22.tgz#a8fe5929bbfa10947f3bf62d4a878706ec6b7718"
+    integrity sha512-DF9utM6VjuIaY388R6XWWDs7CIDTH7on1k1yR+hqaL/T4/OqSCW5uij28APq9KI82CZf0/qtBJI+pjvXcOh0kQ==
+    dependencies:
+      "@types/react" "*"
   
   "@types/react-dom@^17.0.11":
     version "17.0.17"
@@ -706,6 +725,13 @@ Lockfile:
     integrity sha512-aBTIWg1emtu95bLTLx0cpkxwGW3ueZv71nE2YFBpL8k/z5czEW8yYpOo8Dp+UUAFAtKwNaOsh/ioSeQnWlZcfw==
     dependencies:
       "@types/react" "*"
+  
+  "@types/react-toastify@^4.1.0":
+    version "4.1.0"
+    resolved "https://registry.yarnpkg.com/@types/react-toastify/-/react-toastify-4.1.0.tgz#604e712855dd677916d5c66af595d3b590f5d95d"
+    integrity sha512-u7Ie/7LHBsPVz/iJxi/WlRDS7Gh9csCJACTDXx+pSLuZCm94xpkwzhM3jV1L5ZxP/in0Gp2tFbJ91VrSGr1gyQ==
+    dependencies:
+      react-toastify "*"
   
   "@types/react-transition-group@^4.4.5":
     version "4.4.5"
@@ -1077,7 +1103,7 @@ Lockfile:
       ansi-styles "^4.1.0"
       supports-color "^7.1.0"
   
-  clsx@^1.2.1:
+  clsx@^1.1.1, clsx@^1.2.1:
     version "1.2.1"
     resolved "https://registry.yarnpkg.com/clsx/-/clsx-1.2.1.tgz#0ddc4a20a549b59c93a4116bb26f5294ca17dc12"
     integrity sha512-EcR6r5a8bj6pu3ycsa/E/cKVGuTgZJZdsyUYHOksG/UHIiKfjxzRxYJpyVBwYaQeOvghal9fcc4PidlgzugAQg==
@@ -2609,7 +2635,7 @@ Lockfile:
     resolved "https://registry.yarnpkg.com/process-nextick-args/-/process-nextick-args-2.0.1.tgz#7820d9b16120cc55ca9ae7792680ae7dba6d7fe2"
     integrity sha512-3ouUOpQhtgrbOa17J7+uxOTpITYWaGP7/AhoR3+A+/1e9skrzelGi/dXzEYyvbxubEF6Wn2ypscTKiKJFFn1ag==
   
-  prop-types@^15.6.2, prop-types@^15.8.1:
+  prop-types@^15.5.10, prop-types@^15.6.2, prop-types@^15.8.1:
     version "15.8.1"
     resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.8.1.tgz#67d87bf1a694f48435cf332c24af10214a3140b5"
     integrity sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg==
@@ -2667,6 +2693,13 @@ Lockfile:
     resolved "https://registry.yarnpkg.com/react-refresh/-/react-refresh-0.13.0.tgz#cbd01a4482a177a5da8d44c9755ebb1f26d5a1c1"
     integrity sha512-XP8A9BT0CpRBD+NYLLeIhld/RqG9+gktUjW1FkE+Vm7OCinbG1SshcK5tb9ls4kzvjZr9mOQc7HYgBngEyPAXg==
   
+  react-reveal@^1.2.2:
+    version "1.2.2"
+    resolved "https://registry.yarnpkg.com/react-reveal/-/react-reveal-1.2.2.tgz#f47fbc44debc4c185ae2163a215a9e822c7adfef"
+    integrity sha512-JCv3fAoU6Z+Lcd8U48bwzm4pMZ79qsedSXYwpwt6lJNtj/v5nKJYZZbw3yhaQPPgYePo3Y0NOCoYOq/jcsisuw==
+    dependencies:
+      prop-types "^15.5.10"
+  
   react-router-dom@^6.3.0:
     version "6.3.0"
     resolved "https://registry.yarnpkg.com/react-router-dom/-/react-router-dom-6.3.0.tgz#a0216da813454e521905b5fa55e0e5176123f43d"
@@ -2681,6 +2714,13 @@ Lockfile:
     integrity sha512-7Wh1DzVQ+tlFjkeo+ujvjSqSJmkt1+8JO+T5xklPlgrh70y7ogx75ODRW0ThWhY7S+6yEDks8TYrtQe/aoboBQ==
     dependencies:
       history "^5.2.0"
+  
+  react-toastify@*:
+    version "9.0.8"
+    resolved "https://registry.yarnpkg.com/react-toastify/-/react-toastify-9.0.8.tgz#3876c89fc6211a29027b3075010b5ec39ebe4f7e"
+    integrity sha512-EwM+teWt49HSHx+67qI08yLAW1zAsBxCXLCsUfxHYv1W7/R3ZLhrqKalh7j+kjgPna1h5LQMSMwns4tB4ww2yQ==
+    dependencies:
+      clsx "^1.1.1"
   
   react-transition-group@^4.4.5:
     version "4.4.5"
