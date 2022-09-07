@@ -1,7 +1,7 @@
 import { CssBaseline, Grid, Link, Typography } from '@mui/material';
 import React, { Suspense, useState } from 'react';
 
-import NouBg from '../../../assets/noubg.png';
+import NouBg from '../../../assets/nou-beer-bg.png';
 const SignIn = React.lazy(() => import('../SignInUser/SignInUser'));
 const SignUp = React.lazy(() => import('../SignUpUser/SignUpUser'));
 const VerifyEmail = React.lazy(() => import('../VerifyEmail/VerifyEmail'));

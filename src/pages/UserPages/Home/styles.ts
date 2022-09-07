@@ -5,12 +5,6 @@ import { Link } from 'react-router-dom';
 import { keyframes } from 'styled-components';
 import styled from 'styled-components';
 
-//import Button from '../../../components/Form/Button';
-
-interface ITranslateProps {
-  actived: boolean;
-}
-
 const animate = keyframes`
     0% {
         transform: translateX(-100px);
@@ -26,8 +20,8 @@ const animate = keyframes`
 `;
 
 export const Container = MStyled(MuiBox)({
-  height: '100vh',
-  backgroundColor: '#222',
+  // height: '100vh',
+  backgroundColor: '#fff',
   color: '#ddd',
 }) as typeof MuiBox;
 
@@ -62,12 +56,8 @@ export const Title = styled.h1`
   }
 `;
 
-export const SignUpButton = MStyled(Button)({
-  //color: '#eee',
-}) as typeof Button;
-
-export const OptionButton = MStyled(Button)({
-  color: '#D79600',
+export const SignInButton = MStyled(Button)({
+  color: '#eee',
 }) as typeof Button;
 
 export const Logo = styled.img`
@@ -147,22 +137,4 @@ export const TranslateContainer = styled.div`
   margin-top: 10px;
   display: flex;
   justify-content: center;
-`;
-
-export const TranslateButton = styled.button<ITranslateProps>`
-  margin: 0 10px;
-  transition: opacity 0.3s;
-
-  background: none;
-  border: none;
-
-  opacity: ${(props) => (props.actived ? 1 : 0.4)};
-
-  &:hover {
-    opacity: 0.7;
-  }
-`;
-
-export const TranslateImage = styled.img`
-  width: 30px;
 `;

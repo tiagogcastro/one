@@ -2,7 +2,6 @@ import { Visibility, VisibilityOff } from '@mui/icons-material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import {
   Avatar,
-  Button,
   Checkbox,
   FormControl,
   FormControlLabel,
@@ -23,7 +22,7 @@ import { toast } from 'react-toastify';
 import * as Yup from 'yup';
 
 import { ISignInCredentials, useAuth } from '../../../hooks/auth';
-import { SignInButton } from './styles';
+import { OptionButton, SignInButton } from './styles';
 
 interface IProps {
   setPage: any;
@@ -156,10 +155,14 @@ const SignInUser: React.FC<IProps> = ({ setPage }) => {
           />
           <Grid container>
             <Grid item xs>
-              <Button onClick={() => setPage('signUp')}>{'Esqueci a senha'}</Button>
+              <OptionButton onClick={() => setPage('signUp')}>
+                {'Esqueci a senha'}
+              </OptionButton>
             </Grid>
             <Grid item>
-              <Button onClick={() => setPage('signUp')}>{'Criar conta'}</Button>
+              <OptionButton color="primary" onClick={() => setPage('signUp')}>
+                {'Criar conta'}
+              </OptionButton>
             </Grid>
           </Grid>
         </Stack>

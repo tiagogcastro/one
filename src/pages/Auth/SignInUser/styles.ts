@@ -6,7 +6,6 @@ import { keyframes } from 'styled-components';
 import styled from 'styled-components';
 
 //import Button from '../../../components/Form/Button';
-import TextInput from '../../../components/Form/TextInput';
 
 interface ITranslateProps {
   actived: boolean;
@@ -64,15 +63,12 @@ export const Title = styled.h1`
 `;
 
 export const SignInButton = MStyled(Button)({
-  color: '#eee',
+  //color: '#eee',
 }) as typeof Button;
 
-export const Input = styled(TextInput).attrs({
-  containerCustomStyle: {
-    margin: '3px 0',
-    width: '100%',
-  },
-})``;
+export const OptionButton = MStyled(Button)({
+  color: '#D79600',
+}) as typeof Button;
 
 export const Logo = styled.img`
   margin-top: 15px;

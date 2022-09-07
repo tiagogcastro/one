@@ -1,14 +1,14 @@
 import React from 'react';
 
 import { useAuth } from '../../../hooks/auth';
+import { Container } from './styles';
 
 const Home: React.FC = () => {
   const { signOut } = useAuth();
   return (
-    <div>
-      <h1>Home</h1>
+    <Container>
       <button onClick={() => signOut()}>Logout</button>
-    </div>
+    </Container>
   );
 };
 export default Home;

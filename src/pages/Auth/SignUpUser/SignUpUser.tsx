@@ -2,7 +2,6 @@ import { Visibility, VisibilityOff } from '@mui/icons-material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import {
   Avatar,
-  Button,
   FormControl,
   Grid,
   IconButton,
@@ -22,7 +21,7 @@ import { toast } from 'react-toastify';
 import * as Yup from 'yup';
 
 import { ISignUpCredentials, useAuth } from '../../../hooks/auth';
-import { SignUpButton } from './styles';
+import { OptionButton, SignUpButton } from './styles';
 
 interface IProps {
   setPage: any;
@@ -159,7 +158,6 @@ const SignUpUser: React.FC<IProps> = ({ setPage }) => {
             value={formData.email}
             fullWidth
             onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-            helperText="E-mail já cadastrado"
           />
 
           <TextField
@@ -241,7 +239,9 @@ const SignUpUser: React.FC<IProps> = ({ setPage }) => {
             <Grid item xs>
               <Typography variant="body2" color="text.secondary" align="center">
                 Já possui uma conta?{' '}
-                <Button onClick={() => setPage('signIn')}>{'Faça login'}</Button>
+                <OptionButton onClick={() => setPage('signIn')}>
+                  {'Faça login'}
+                </OptionButton>
               </Typography>
             </Grid>
           </Grid>
