@@ -1,7 +1,8 @@
 import { CssBaseline, Grid, Link, Typography } from '@mui/material';
 import React, { Suspense, useState } from 'react';
 
-import NouBg from '../../../assets/nou-beer-bg.png';
+//import NouBg from '../../../assets/nou-beer-bg.png';
+import Particles from '../../../components/Particles/Particles';
 const SignIn = React.lazy(() => import('../SignInUser/SignInUser'));
 const SignUp = React.lazy(() => import('../SignUpUser/SignUpUser'));
 const VerifyEmail = React.lazy(() => import('../VerifyEmail/VerifyEmail'));
@@ -32,15 +33,19 @@ const AuthHome: React.FC = () => {
           xs={false}
           sm={2}
           md={8}
-          sx={{
-            backgroundImage: `url(${NouBg})`,
-            backgroundRepeat: 'no-repeat',
-            backgroundColor: (t) =>
-              t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-          }}
-        />
+          sx={
+            {
+              // backgroundImage: `url(${NouBg})`,
+              // backgroundRepeat: 'no-repeat',
+              // backgroundColor: (t) =>
+              //   t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
+              // backgroundSize: 'cover',
+              // backgroundPosition: 'center',
+            }
+          }
+        >
+          <Particles></Particles>
+        </Grid>
         <Grid
           item
           xs={12}
@@ -50,6 +55,7 @@ const AuthHome: React.FC = () => {
           elevation={6}
           square
           sx={{
+            zIndex: '1000',
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'center',

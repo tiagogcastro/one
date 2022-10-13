@@ -14,7 +14,7 @@ const UserRoutes: React.FC = () => (
           </UserLayout>
         }
       >
-        <Route path="/home" element={<Home />} />
+        <Route path="/" element={<Home />} />
       </Route>
     </Routes>
   </Router>

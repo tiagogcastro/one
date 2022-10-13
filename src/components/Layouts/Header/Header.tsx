@@ -1,16 +1,15 @@
 import React from 'react';
 
-import { Container } from './styles';
+import { Container, HeaderInfo } from './styles';
 
 interface IProps {
   children?: React.ReactNode;
 }
 
-const Header: React.FC<IProps> = (props) => {
+const Header: React.FC<IProps> = () => {
   return (
     <Container>
-      Header
-      {props.children}
+      <HeaderInfo>Header</HeaderInfo>
     </Container>
   );
 };

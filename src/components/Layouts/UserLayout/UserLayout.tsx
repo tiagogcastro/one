@@ -1,3 +1,4 @@
+import { Grid } from '@mui/material';
 import React from 'react';
 
 import Header from '../Header/Header';
@@ -11,10 +12,16 @@ interface IProps {
 const UserLayout: React.FC<IProps> = (props) => {
   return (
     <Container>
-      <Header />
-      <Navbar />
-      {props.children}
-      Layout
+      <Grid container>
+        <Grid xs={2}>
+          <Navbar />
+        </Grid>
+        <Grid xs={10}>
+          {' '}
+          <Header />
+          {props.children}
+        </Grid>
+      </Grid>
     </Container>
   );
 };
