@@ -7,18 +7,18 @@
     "@adonisjs/lucid/build/commands",
     "@adonisjs/mail/build/commands"
   ],
-  "exceptionHandlerNamespace": "App/Exceptions/Handler",
+  "exceptionHandlerNamespace": "src/shared/infra/http/exceptions/Handler",
   "aliases": {
-    "App": "app",
-    "Config": "config",
-    "Database": "database",
-    "Contracts": "contracts"
+    "Config": "Config",
+    "src": "src",
+    "Contracts": "contracts",
+    "modules": "./src/modules"
   },
   "preloads": [
-    "./start/routes",
-    "./start/kernel",
+    "./src/shared/infra/http/start/router",
+    "./src/shared/infra/http/start/kernel",
     {
-      "file": "./start/events",
+      "file": "./src/shared/infra/http/start/events",
       "environment": [
         "console",
         "repl",
@@ -27,7 +27,7 @@
     }
   ],
   "providers": [
-    "./providers/AppProvider",
+    "./src/shared/providers/AppProvider",
     "@adonisjs/core",
     "@adonisjs/lucid",
     "@adonisjs/auth",
@@ -39,7 +39,7 @@
   ],
   "metaFiles": [
     {
-      "pattern": "resources/views/**/*.edge",
+      "pattern": "./src/shared/resources/views/**/*.edge",
       "reloadServer": false
     }
   ]

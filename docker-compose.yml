@@ -1,0 +1,24 @@
+version: '3'
+
+services:
+  database:
+    container_name: nou_postgres
+    image: 'postgres:alpine'
+    ports:
+      - '5432:5432'
+    volumes:
+      - 'postgresql_data:/var/lib/postgresql'
+    environment:
+      - POSTGRES_USER=nou
+      - POSTGRES_PASSWORD=nou
+      - POSTGRES_DATABASE=nou
+    networks:
+      - app-net
+
+networks:
+  app-net:
+    driver: bridge
+
+volumes:
+  postgresql_data:
+    driver: local

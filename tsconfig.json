@@ -16,7 +16,7 @@
         "./app/*"
       ],
       "Config/*": [
-        "./config/*"
+        "src/config/*"
       ],
       "Contracts/*": [
         "./contracts/*"

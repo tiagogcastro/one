@@ -1,0 +1,66 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                String     @id @default(uuid())
+  created_at        DateTime   @default(now())
+  updated_at        DateTime   @default(now())
+  name              String
+  email             String     @unique
+  lastname          String
+  username          String     @unique
+  avatar            String?
+  email_verified_at String?
+  remember_me_token String?
+  is_activated      Boolean    @default(false)
+  password          String
+  UserRole          UserRole[]
+  ApiToken          ApiToken[]
+
+  @@map("users")
+}
+
+model Role {
+  id         String     @id @default(uuid())
+  created_at DateTime   @default(now())
+  updated_at DateTime   @default(now())
+  role       String     @unique @default("default")
+  UserRole   UserRole[]
+
+  @@map("roles")
+}
+
+model UserRole {
+  id         String   @id @default(uuid())
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+  user_id    User     @relation(fields: [userId], references: [id])
+  userId     String
+  role_id    Role     @relation(fields: [roleId], references: [id])
+  roleId     String
+
+  @@map("user_roles")
+}
+
+model ApiToken {
+  id         String   @id @default(uuid())
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+  expires_at DateTime
+  name       String
+  token      String
+  type       String
+  userId     User     @relation(fields: [user_id], references: [id])
+  user_id    String
+
+  @@map("api_tokens")
+}
