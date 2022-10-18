@@ -32,7 +32,6 @@ export class AuthUserController {
         user
       }
     } catch(error) {
-        console.log({error})
       return response
         .status(400)
         .send({

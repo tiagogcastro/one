@@ -24,7 +24,6 @@ model User {
   is_activated      Boolean    @default(false)
   password          String
   UserRole          UserRole[]
-  ApiToken          ApiToken[]
 
   @@map("users")
 }
@@ -43,24 +42,10 @@ model UserRole {
   id         String   @id @default(uuid())
   created_at DateTime @default(now())
   updated_at DateTime @default(now())
-  user_id    User     @relation(fields: [userId], references: [id])
+  user_id    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId     String
-  role_id    Role     @relation(fields: [roleId], references: [id])
+  role_id    Role     @relation(fields: [roleId], references: [id], onDelete: Cascade)
   roleId     String
 
   @@map("user_roles")
-}
-
-model ApiToken {
-  id         String   @id @default(uuid())
-  created_at DateTime @default(now())
-  updated_at DateTime @default(now())
-  expires_at DateTime
-  name       String
-  token      String
-  type       String
-  userId     User     @relation(fields: [user_id], references: [id])
-  user_id    String
-
-  @@map("api_tokens")
 }

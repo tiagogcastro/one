@@ -21,4 +21,13 @@ export async function findUserRoleByRoleIdAndUserId(role_id: string, user_id: st
 
   return userRole;
 }
+
+export async function deleteUserById(user_id: string): Promise<void> {
+  await prisma.user.delete({
+    where: {
+      id: user_id
+    },
+  });
+}
+  
   
