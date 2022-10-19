@@ -1,0 +1,52 @@
+import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import { findByRole } from 'src/modules/Roles/repositories/role-repositories';
+import { findById } from 'src/modules/User/repositories/user-repositories';
+import { findUserRoleByRoleIdAndUserId } from 'src/modules/User/repositories/user-role-repositories';
+import { prisma } from 'src/shared/infra/prisma/client';
+import { findByPermission } from '../../repositories/permission-repositories';
+
+export class DeletePermissionController {
+  public async handle({ request, response }: HttpContextContract) {
+    const userLoggedId = request.user.id;
+
+    try {
+      const permission = request.qs().permission;
+
+      const userLogged = await findById(userLoggedId);
+
+      if (!userLogged) { 
+        throw new Error('User not found');
+      }
+
+      const adminRole = await findByRole('admin');
+
+      if (!adminRole) {
+        throw new Error('Admin role not found');
+      }
+
+      const userAdminRole = await findUserRoleByRoleIdAndUserId(adminRole.id, userLoggedId);
+
+      if (!userAdminRole) {
+        throw new Error('Cannot delete permission');
+      }
+
+      const foundPermission = await findByPermission(permission);
+
+      if (!foundPermission) {
+        throw new Error('Permission not exist');
+      }
+
+      await prisma.permission.delete({
+        where: {
+          permission
+        }
+      });
+  
+      return response.status(201).json({
+        success: 'Permission deleted successfully'
+      });
+    } catch (error) {
+      return response.status(201).json({error: error.message});
+    }
+  }
+}
