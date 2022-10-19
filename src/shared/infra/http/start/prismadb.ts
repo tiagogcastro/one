@@ -5,6 +5,20 @@ import { findByRole } from 'src/modules/Roles/repositories/role-repositories'
 
 export async function startPrismaDB() {
   try {
+    const permissionsDefault = ['edit.setpoint', 'edit.status', 'edit.config', 'manual', 'auto'];
+
+    permissionsDefault.forEach(async (permission) => {
+      const foundPermissions = await prisma.permission.findMany();
+
+      if(!foundPermissions.find((perm => perm.permission === permission))) {
+        await prisma.permission.create({
+          data: {
+            permission
+          }
+        });
+      }
+    });
+
     const foundUser = await findByEmail('admin@admin.com');
 
     if(foundUser) {
@@ -62,9 +76,34 @@ export async function startPrismaDB() {
         },
         {
           role: 'default'
+        },
+        {
+          role: 'company.admin'
         }
       ]
     });
+
+    
+
+    // await prisma.permission.createMany({
+    //   data: [
+    //     {
+    //       permission: 'edit.setpoint'
+    //     },
+    //     {
+    //       permission: 'edit.status'
+    //     },
+    //     {
+    //       permission: 'edit.config'
+    //     },
+    //     {
+    //       permission: 'manual'
+    //     },
+    //     {
+    //       permission: 'auto'
+    //     }
+    //   ]
+    // });
 
     const foundAdminRole2 = await findByRole('admin');
 
