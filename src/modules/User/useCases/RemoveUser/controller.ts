@@ -1,5 +1,6 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext';
 import { findByRole } from 'src/modules/Roles/repositories/role-repositories';
+import { findById } from '../../repositories/user-repositories';
 import { deleteUserById, findUserRoleByRoleIdAndUserId } from '../../repositories/user-role-repositories';
 
 export class RemoveUserController {
@@ -9,6 +10,12 @@ export class RemoveUserController {
     const userIdToDelete = request.headers().user_id as string;
 
     try {
+      const userToDelete = await findById(userIdToDelete);
+
+      if (!userToDelete) {
+        throw new Error('User not found');
+      }
+
       const adminRole = await findByRole('admin');
 
       if (!adminRole) {

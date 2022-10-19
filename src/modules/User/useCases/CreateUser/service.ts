@@ -3,6 +3,7 @@ import { findUserRoleByRoleIdAndUserId } from '../../repositories/user-role-repo
 import { prisma } from 'src/shared/infra/prisma/client';
 import { findByEmail } from '../../repositories/user-repositories';
 import bcrypt from 'bcrypt';
+import { Company } from '@prisma/client';
 
 export interface CreateUserData {
   name: string;
@@ -10,10 +11,22 @@ export interface CreateUserData {
   email: string;
   password: string;
   username: string;
+
+  company?: {
+    name: string;
+  };
 };
 
 export class CreateUserService {
   async execute(data: CreateUserData, userLoggedId: string) {
+    const userData = {
+      name: data.name,
+      lastname: data.lastname,
+      email: data.email,
+      password: data.password,
+      username: data.username,
+    };
+    
     const adminRole = await findByRole('admin');
 
     if(!adminRole) {
@@ -26,10 +39,10 @@ export class CreateUserService {
       throw new Error('Você não tem permissão para criar este usuário.');
     }
 
-    const clientAdmin = await findByRole('client.admin');
+    const clientAdmin = await findByRole('company.admin');
 
     if(!clientAdmin) {
-      throw new Error('client.admin Role does not exist');
+      throw new Error('company.admin Role does not exist');
     }
 
     const userExist = await findByEmail(data.email);
@@ -52,10 +65,28 @@ export class CreateUserService {
 
     const user = await prisma.user.create({
       data: {
-        ...data,
+        ...userData,
         password: passwordHashed
       }
     });
+
+    let company: Company | null = null;
+
+    if(data.company) {
+      company = await prisma.company.create({
+        data: {
+          ...data.company,
+          ownerId: user.id
+        }
+      });
+
+      await prisma.userCompany.create({
+        data: {
+          userId: user.id,
+          companyId: company?.id,
+        }
+      });
+    }
 
     await prisma.userRole.create({
       data: {
@@ -64,6 +95,9 @@ export class CreateUserService {
       }
     });
 
-    return user;
+    return {
+      user,
+      company
+    };
   }
 }
