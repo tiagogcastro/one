@@ -70,7 +70,7 @@ export class RemoveUserPermissionController {
         success: `User Permission ${permission} deleted successfully`
       });
     } catch (error) {
-      return response.status(201).json({error: error.message});
+      return response.status(403).json({error: error.message});
     }
   }
 }

@@ -46,7 +46,7 @@ export class CreatePermissionController {
         permission: permissionData
       });
     } catch (error) {
-      return response.status(201).json({error: error.message});
+      return response.status(403).json({error: error.message});
     }
   }
 }

@@ -46,7 +46,7 @@ export class DeletePermissionController {
         success: 'Permission deleted successfully'
       });
     } catch (error) {
-      return response.status(201).json({error: error.message});
+      return response.status(403).json({error: error.message});
     }
   }
 }
