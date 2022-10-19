@@ -1,6 +1,5 @@
 import Route from '@ioc:Adonis/Core/Route';
-import { AdminAuthViewAsClientController } from '../../useCases/AdminAuthViewAsClient/controller';
-
+import { AdminAuthViewAsClientController } from '../../useCases/AdminViewAsClient/controller';
 import { AuthUserController } from '../../useCases/AuthUser/controller';
 import { CreateUserController } from '../../useCases/CreateUser/controller';
 import { EmailVerificationListingController } from '../../useCases/EmailVerification/controller';
