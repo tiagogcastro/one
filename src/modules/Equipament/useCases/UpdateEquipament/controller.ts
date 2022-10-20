@@ -4,20 +4,12 @@ import { findById } from 'src/modules/User/repositories/user-repositories';
 import { findUserRoleByRoleIdAndUserId } from 'src/modules/User/repositories/user-role-repositories';
 import { prisma } from 'src/shared/infra/prisma/client';
 
-export class RemoveUserCompanyController {
+export class UpdateEquipamentController {
   public async handle({ request, response }: HttpContextContract) {
     const userLoggedId = request.user.id;
-
+   
     try {
-      const { user_id, owner_company_id } = request.all();
-
-      if(!user_id) {
-        throw new Error('Please enter user_id');
-      }
-
-      if(!owner_company_id) {
-        throw new Error('Please enter owner_company_id');
-      }
+      const { owner_company_id, equipament, equipament_id } = request.all();
 
       const userLogged = await findById(userLoggedId);
 
@@ -29,6 +21,14 @@ export class RemoveUserCompanyController {
 
       if (!adminRole) {
         throw new Error('Admin role not found');
+      }
+      
+      if(!owner_company_id) {
+        throw new Error('Please enter owner_company_id');
+      }
+
+      if(!equipament_id) {
+        throw new Error('Please enter equipament_id');
       }
 
       const userAdminRole = await findUserRoleByRoleIdAndUserId(adminRole.id, userLoggedId);
@@ -43,32 +43,34 @@ export class RemoveUserCompanyController {
         throw new Error('Company does not exist');
       }
 
-      if(!userAdminRole && company.ownerId === user_id) {
-        throw new Error('You cannot remove the owner of this company');
-      }
-
       if(!userAdminRole && company?.ownerId !== userLoggedId) {
         throw new Error('You does not owner this company');
       }
 
-      const userCompany = await prisma.userCompany.findFirst({
+      let foundEquipament = await prisma.equipament.findUnique({
         where: {
-          userId: user_id
+          id: equipament_id,
         }
       });
 
-      if (!userCompany) {
-        throw new Error('This user no has company');
+      foundEquipament = {
+        ...equipament || foundEquipament,
       }
 
-      await prisma.userCompany.delete({
+      if(!foundEquipament) {
+        throw new Error('Equipament does not exist');
+      }
+
+      const equipamentCreated = await prisma.equipament.update({
         where: {
-          id: userCompany.id
-        }
+          id: equipament_id,
+        },
+        data: foundEquipament
       });
   
       return response.status(201).json({
-        success: `User company  deleted successfully`
+        equipament: equipamentCreated,
+        userLogged,
       });
     } catch (error) {
       return response.status(403).json({error: error.message});

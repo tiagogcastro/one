@@ -4,19 +4,27 @@ import { findById } from 'src/modules/User/repositories/user-repositories';
 import { findUserRoleByRoleIdAndUserId } from 'src/modules/User/repositories/user-role-repositories';
 import { prisma } from 'src/shared/infra/prisma/client';
 
-export class RemoveUserCompanyController {
+export class CreateEquipamentController {
   public async handle({ request, response }: HttpContextContract) {
     const userLoggedId = request.user.id;
-
+   
     try {
-      const { user_id, owner_company_id } = request.all();
-
-      if(!user_id) {
-        throw new Error('Please enter user_id');
-      }
-
+      const { owner_company_id, equipament } = request.all();
+      
       if(!owner_company_id) {
         throw new Error('Please enter owner_company_id');
+      }
+
+      if(!equipament) {
+        throw new Error('Please enter equipament');
+      }
+
+      if(!equipament.capacity) {
+        throw new Error('Please enter equipament.capacity');
+      }
+
+      if(!equipament.name) {
+        throw new Error('Please enter equipament.name');
       }
 
       const userLogged = await findById(userLoggedId);
@@ -43,32 +51,23 @@ export class RemoveUserCompanyController {
         throw new Error('Company does not exist');
       }
 
-      if(!userAdminRole && company.ownerId === user_id) {
-        throw new Error('You cannot remove the owner of this company');
-      }
-
       if(!userAdminRole && company?.ownerId !== userLoggedId) {
         throw new Error('You does not owner this company');
       }
 
-      const userCompany = await prisma.userCompany.findFirst({
-        where: {
-          userId: user_id
-        }
-      });
-
-      if (!userCompany) {
-        throw new Error('This user no has company');
-      }
-
-      await prisma.userCompany.delete({
-        where: {
-          id: userCompany.id
+      const equipamentCreated = await prisma.equipament.create({
+        data: {
+          ...equipament,
+          companyId: company.id
+        },
+        include: {
+          company: true
         }
       });
   
       return response.status(201).json({
-        success: `User company  deleted successfully`
+        equipament: equipamentCreated,
+        userLogged,
       });
     } catch (error) {
       return response.status(403).json({error: error.message});

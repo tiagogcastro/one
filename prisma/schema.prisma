@@ -83,6 +83,7 @@ model Company {
   user        User          @relation(fields: [ownerId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   ownerId     String
   UserCompany UserCompany[]
+  Equipament  Equipament[]
 
   @@map("company")
 }
@@ -97,4 +98,19 @@ model UserCompany {
   companyId  String
 
   @@map("user_company")
+}
+
+model Equipament {
+  id         String   @id @default(uuid())
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+  name       String
+  setor      String?
+  offset     Decimal?
+  histerese  Decimal?
+  capacity   Float    @default(0)
+  company    Company  @relation(fields: [companyId], references: [id])
+  companyId  String
+
+  @@map("equipament")
 }
