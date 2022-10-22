@@ -1,21 +1,23 @@
-import React from 'react';
+import { BrowserRouter } from 'react-router-dom';
+import { useAuth } from '../hooks/useAuth';
+import { Routers } from './Routers';
 
-import { useAuth } from '../hooks/auth';
-import Admin from './admin.routes';
-import Auth from './auth.routes';
-import User from './user.routes';
+export function AppRouter() {
+  const { loading } = useAuth();
 
-const Routes: React.FC = () => {
-  const { user } = useAuth();
-  const Route = () => {
-    if (!user) {
-      return <Auth />;
-    }
-    if (user.profile.name === 'cliente') return <User />;
-    return user.environment === 'client' ? <User /> : <Admin />;
-  };
+  if (loading) {
+    return (
+      <>
+        <p>Loading...</p>
+      </>
+    );
+  }
 
-  return <Route />;
-};
-
-export default Routes;
+  return (
+    <>
+      <BrowserRouter>
+        <Routers />
+      </BrowserRouter>
+    </>
+  );
+}
