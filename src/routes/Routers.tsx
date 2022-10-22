@@ -1,16 +1,14 @@
-import { Route, Routes, Navigate } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 
+import { useAuth } from '../hooks/useAuth';
+import { SignInUserPage } from '../pages/Auth/SignInUser';
+import { SignUpUserPage } from '../pages/Auth/SignUpUser';
 import Home from '../pages/UserPages/Home/Home';
-
 import { AdminRoute } from './AdminRoute';
-import { PublicRoute } from './PublicRoute';
-
 import { CompanyAdminRoute } from './company/AdminRouter';
 import { CompanyGeralRoute } from './company/GeralRouter';
-import { SignUpUserPage } from '../pages/Auth/SignUpUser';
-import { SignInUserPage } from '../pages/Auth/SignInUser';
 import { PrivateRoute } from './PrivateRoute';
-import { useAuth } from '../hooks/useAuth';
+import { PublicRoute } from './PublicRoute';
 
 export function Routers() {
   const { isLogged } = useAuth();
