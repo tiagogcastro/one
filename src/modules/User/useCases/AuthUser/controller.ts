@@ -1,7 +1,7 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext';
 import { jwtConfig } from '../../../../../config/jwt';
 import { sign } from 'jsonwebtoken';
-import { findByEmail } from '../../repositories/user-repositories';
+import { findAllUserInfoByEmail } from '../../repositories/user-repositories';
 import bcrypt from 'bcrypt';
 
 export class AuthUserController {
@@ -10,7 +10,7 @@ export class AuthUserController {
       const password = await request.input('password');
       const email = await request.input('email')
 
-      const user = await findByEmail(email);
+      const user = await findAllUserInfoByEmail(email);
 
       if(!user) {
         throw new Error("User not exist");
@@ -29,7 +29,7 @@ export class AuthUserController {
 
       return {
         token,
-        user
+        user,
       }
     } catch(error) {
       return response

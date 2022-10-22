@@ -41,6 +41,59 @@ export async function updateUser(id: string, data: User): Promise<User> {
 
   return user;
 }
-  
-  
+
+export async function findAllUserInfoByEmail(email: string): Promise<User | null> {
+  const user = await prisma.user.findUnique({
+    where: {
+      email
+    },
+    include: {
+      Company: true,
+      UserCompany: true,
+      UserPermission: {
+        select: {
+          id: true,
+          permission: true,
+        }
+      },
+      UserRole: {
+        select: {
+          id: true,
+          role: true
+        }
+      },
+    }
+  });
+
+  return user;
+}
+
+export async function findAllUserInfoById(id: string): Promise<User | null> {
+  const user = await prisma.user.findUnique({
+    where: {
+      id
+    },
+    include: {
+      UserCompany: {
+        include: {
+          company: true
+        }
+      },
+      UserPermission: {
+        select: {
+          id: true,
+          permission: true,
+        }
+      },
+      UserRole: {
+        select: {
+          id: true,
+          role: true
+        }
+      },
+    }
+  });
+
+  return user;
+}
   

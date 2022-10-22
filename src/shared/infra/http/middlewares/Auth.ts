@@ -43,20 +43,26 @@ export default class AuthMiddleware {
     )
   }
    public async handle(
-    { request }: HttpContextContract,
+    { request, response }: HttpContextContract,
     next: () => Promise<void>,
   ) {
     const authHeader = request.headers().authorization;
-
-    if (!authHeader) {
-      throw new Error('JWT token is missing');
+    
+    try {
+      if (!authHeader) {
+        throw new Error('JWT token is missing');
+      }
+    } catch(error) {
+      return response.status(401).json({
+        error: error.message
+      })
     }
-  
-    const [, token] = authHeader.split(' ');
 
     try {
+      const [, token] = authHeader.split(' ');
+
       const decoded = verify(token, jwtConfig.secret);
-  
+
       const { sub } = decoded as any;
   
       request.user = {
@@ -64,8 +70,10 @@ export default class AuthMiddleware {
       };
 
       return next();
-    } catch {
-      throw new Error('Invalid JWT token');
+    } catch (error) {
+      return response.status(401).json({
+        error: 'JWT token is not valid'
+      })
     }
   }
 }

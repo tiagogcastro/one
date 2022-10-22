@@ -83,28 +83,6 @@ export async function startPrismaDB() {
       ]
     });
 
-    
-
-    // await prisma.permission.createMany({
-    //   data: [
-    //     {
-    //       permission: 'edit.setpoint'
-    //     },
-    //     {
-    //       permission: 'edit.status'
-    //     },
-    //     {
-    //       permission: 'edit.config'
-    //     },
-    //     {
-    //       permission: 'manual'
-    //     },
-    //     {
-    //       permission: 'auto'
-    //     }
-    //   ]
-    // });
-
     const foundAdminRole2 = await findByRole('admin');
 
     if(!foundAdminRole2) {

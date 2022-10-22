@@ -4,6 +4,7 @@ import { sign } from 'jsonwebtoken';
 import { findByEmail, findById } from '../../repositories/user-repositories';
 import { findByRole } from 'src/modules/Roles/repositories/role-repositories';
 import { findUserRoleByRoleIdAndUserId } from '../../repositories/user-role-repositories';
+import { prisma } from 'src/shared/infra/prisma/client';
 
 export class AdminAuthViewAsClientController {
   public async handle({ request, response }: HttpContextContract) {
@@ -40,6 +41,28 @@ export class AdminAuthViewAsClientController {
         throw new Error("You cannot log into a customer's account");
       }
 
+      const userRoles = await prisma.userRole.findMany({
+        where: {
+          userId: user.id,
+        },
+        select: {
+          role: true,
+          created_at: true,
+          updated_at: true,
+        }
+      });
+
+      const userPermissions = await prisma.userPermission.findMany({
+        where: {
+          userId: user.id,
+        },
+        select: {
+          permission: true,
+          created_at: true,
+          updated_at: true,
+        }
+      });
+
       const token = sign({}, jwtConfig.secret, {
         subject: user.id,
         expiresIn: '1d',
@@ -47,7 +70,11 @@ export class AdminAuthViewAsClientController {
 
       return {
         token,
-        user
+        user: {
+          ...user,
+          userRoles,
+          userPermissions,
+        },
       }
     } catch(error) {
       return response

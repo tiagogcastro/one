@@ -1,17 +1,47 @@
+import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext';
+
 import { prisma } from 'src/shared/infra/prisma/client'
+import { findAllUserInfoById } from '../../repositories/user-repositories';
 
 export class UserListingController {
   public async index() {
-    const users = await prisma.user.findMany()
+    const users = await prisma.user.findMany({
+      include: {
+        Company: true,
+        UserCompany: true,
+        UserPermission: {
+          select: {
+            id: true,
+            permission: true,
+          }
+        },
+        UserRole: {
+          select: {
+            id: true,
+            role: true
+          }
+        },
+      }
+    })
     return users
   }
-  public async show({ params }) {
-    const users = await prisma.user.findUnique({
-      where: {
-        id: params.id
-      }
-    });
+  public async show({ request, response }: HttpContextContract) {
+    try {
+      const user_id_params = request.qs().user_id as string;
 
-    return users;
+      const user = await findAllUserInfoById(user_id_params || request.user.id);
+
+      if(!user) {
+        throw new Error('User not found');
+      }
+
+      return user;
+    } catch (error) {
+      return response
+        .status(400)
+        .send({
+          error: error.message
+        })
+    }
   }
 }
