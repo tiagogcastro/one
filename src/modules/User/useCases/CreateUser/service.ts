@@ -33,16 +33,23 @@ export class CreateUserService {
       throw new Error('admin Role does not exist');
     }
 
-    const userHasAdminRole = await findUserRoleByRoleIdAndUserId(adminRole.id, userLoggedId);
+    const isCompanyAdminRole = await findByRole('company.admin');
 
-    if(!userHasAdminRole) {
-      throw new Error('Você não tem permissão para criar este usuário.');
+    if(!isCompanyAdminRole) {
+      throw new Error('company.admin Role does not exist');
     }
 
-    const clientAdmin = await findByRole('company.admin');
+    const userIsAdminRole = await findUserRoleByRoleIdAndUserId(adminRole.id, userLoggedId);
+    const userIsAdminCompanyRole = await findUserRoleByRoleIdAndUserId(isCompanyAdminRole.id, userLoggedId);
 
-    if(!clientAdmin) {
-      throw new Error('company.admin Role does not exist');
+    const userCompany = await prisma.userCompany.findFirst({
+      where: {
+        userId: userLoggedId
+      },
+    });
+
+    if(!userIsAdminRole && !userIsAdminCompanyRole && !userCompany) {
+      throw new Error('Você não tem permissão para criar este usuário.');
     }
 
     const userExist = await findByEmail(data.email);
@@ -61,6 +68,12 @@ export class CreateUserService {
       throw new Error('User username already exist');
     }
 
+    let company: Company | null = null;
+
+    if(userIsAdminCompanyRole && data.company) {
+      throw new Error('You cannot create a company for this account');
+    }
+    
     const passwordHashed = await bcrypt.hash(data.password, 10);;
 
     const user = await prisma.user.create({
@@ -70,9 +83,26 @@ export class CreateUserService {
       }
     });
 
-    let company: Company | null = null;
+    if(userIsAdminCompanyRole) {
+      company = await prisma.company.findFirst({
+        where: {
+          id: userCompany?.companyId
+        }
+      });
 
-    if(data.company) {
+      if(!company) {
+        throw new Error('Company does not exist');
+      }
+
+      await prisma.userCompany.create({
+        data: {
+          userId: user.id,
+          companyId: company.id,
+        }
+      });
+    }
+
+    if(!userIsAdminCompanyRole && data.company) {
       company = await prisma.company.create({
         data: {
           ...data.company,
@@ -86,12 +116,25 @@ export class CreateUserService {
           companyId: company?.id,
         }
       });
+
+      await prisma.userRole.create({
+        data: {
+          userId: user.id,
+          roleId: isCompanyAdminRole.id,
+        }
+      });
+    }
+
+    const defaultRole = await findByRole('default');
+    
+    if(!defaultRole) {
+      throw new Error('default Role does not exist');
     }
 
     await prisma.userRole.create({
       data: {
         userId: user.id,
-        roleId: clientAdmin.id,
+        roleId: defaultRole.id,
       }
     });
 

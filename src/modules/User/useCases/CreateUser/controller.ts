@@ -14,13 +14,14 @@ export class CreateUserController {
       }
   
       const createUserService = new CreateUserService();
-      const user = await createUserService.execute(data, userLoggedId);
+      const {user, company: companyData} = await createUserService.execute(data, userLoggedId);
   
       return response
         .status(201)
         .send({ 
           success: 'Registration successful, check your email inbox for a verification email',
           user,
+          company: companyData
         });
     } catch (error) {
       return response
