@@ -11,7 +11,7 @@ export class RemoveUserPermissionController {
     const userLoggedId = request.user.id;
 
     try {
-      const { user_id, permission } = request.qs();
+      const { user_id, permission, company_id } = request.qs();
 
       if(!permission) {
         throw new Error('Please enter permission');
@@ -19,6 +19,10 @@ export class RemoveUserPermissionController {
 
       if(!user_id) {
         throw new Error('Please enter user_id');
+      }
+
+      if(!company_id) {
+        throw new Error('Please enter company_id');
       }
 
       const userLogged = await findById(userLoggedId);
@@ -33,31 +37,41 @@ export class RemoveUserPermissionController {
         throw new Error('Admin role not found');
       }
 
+      const isCompanyAdminRole = await findByRole('company.admin');
+
+      if(!isCompanyAdminRole) {
+        throw new Error('company.admin Role does not exist');
+      }
+
+      const userAdminRole = await findUserRoleByRoleIdAndUserId(adminRole.id, userLoggedId);
+      const userIsAdminCompanyRole = await findUserRoleByRoleIdAndUserId(isCompanyAdminRole.id, userLoggedId);
+  
+      const userCompany = await prisma.userCompany.findFirst({
+        where: {
+          userId: userLoggedId,
+        },
+      });
+
       const foundPermission = await findByPermission(permission);
 
       if (!foundPermission) {
         throw new Error('Permission not exist');
       }
 
-      const userAdminRole = await findUserRoleByRoleIdAndUserId(adminRole.id, userLoggedId);
-
-      const company = await prisma.company.findFirst({
+      const foundUserPermission = await prisma.userPermission.findFirst({
         where: {
-          ownerId: user_id
+          companyId: company_id,
+          userId: user_id,
+          permissionId: foundPermission.id
         }
-      });
-
-      if(!userAdminRole && company?.ownerId !== userLoggedId) {
-        throw new Error('You cannot give permission');
-      }
-
-      const foundUserPermission = await findUserPermissionByIds(
-        foundPermission.id,
-        user_id
-      );
+      })
 
       if(!foundUserPermission) {
-        throw new Error('This user permission does not exist');
+        throw new Error('This user permission from this company does not exist');
+      }
+
+      if(!userAdminRole || !userIsAdminCompanyRole && userCompany?.companyId !== company_id) {
+        throw new Error('Você não tem permissão para remover esta permissão do usuário.');
       }
 
       await prisma.userPermission.delete({

@@ -7,7 +7,7 @@ export class ListUserFromCompanyController {
   public async handle({ request, response }: HttpContextContract) {
     const userLoggedId = request.user.id;
 
-    const { companyOwnerId } = request.all();
+    const { company_id } = request.all();
 
     try {
       const adminRole = await findByRole('admin');
@@ -16,25 +16,38 @@ export class ListUserFromCompanyController {
         throw new Error('Admin role not found');
       }
 
+      const isCompanyAdminRole = await findByRole('company.admin');
+
+      if(!isCompanyAdminRole) {
+        throw new Error('company.admin Role does not exist');
+      }
+
+      const userAdminRole = await findUserRoleByRoleIdAndUserId(adminRole.id, userLoggedId);
+      const userIsAdminCompanyRole = await findUserRoleByRoleIdAndUserId(isCompanyAdminRole.id, userLoggedId);
+
       const company = await prisma.company.findFirst({
         where: {
-          ownerId: companyOwnerId
+          id: company_id
         }
       });
 
       if(!company) {
-        throw new Error("This company doesn't exist or you don't own it");
+        throw new Error('Company not found');
       }
 
-      const userAdminRole = await findUserRoleByRoleIdAndUserId(adminRole.id, userLoggedId);
+      const userCompany = await prisma.userCompany.findFirst({
+        where: {
+          userId: userLoggedId,
+        }
+      });
 
-      if(!userAdminRole && company.ownerId !== userLoggedId) {
+      if(!userAdminRole && !userIsAdminCompanyRole && !userCompany) {
         throw new Error('You cannot list users from this company');
       }
       
       const users = await prisma.userCompany.findMany({
         where: {
-          userId: companyOwnerId
+          companyId: company_id,
         },
         select: {
           companyId: true,
@@ -46,6 +59,11 @@ export class ListUserFromCompanyController {
                 select: {
                   permission: true
                 },
+              },
+              UserRole: {
+                select: {
+                  role: true,
+                }
               }
             }
           },
