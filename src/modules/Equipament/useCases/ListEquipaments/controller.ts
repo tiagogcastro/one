@@ -7,8 +7,6 @@ export class ListEquipamentsController {
   public async handle({ request, response }: HttpContextContract) {
     const userLoggedId = request.user.id;
 
-    const { owner_company_id } = request.qs();
-
     try {
       const adminRole = await findByRole('admin');
 
@@ -16,24 +14,26 @@ export class ListEquipamentsController {
         throw new Error('Admin role not found');
       }
 
-      if(!owner_company_id) {
-        throw new Error('Please enter owner_company_id');
-      }
+      const userCompany = await prisma.userCompany.findFirst({
+        where: {
+          userId: userLoggedId
+        }
+      });
 
+      const userAdminRole = await findUserRoleByRoleIdAndUserId(adminRole.id, userLoggedId);
+
+      if(!userAdminRole && userCompany?.userId !== userLoggedId) {
+        throw new Error('You cannot list equipaments from this company');
+      }
+      
       const company = await prisma.company.findFirst({
         where: {
-          ownerId: owner_company_id
+          id: userCompany?.companyId
         }
       });
 
       if(!company) {
         throw new Error("This company doesn't exist or you don't own it");
-      }
-
-      const userAdminRole = await findUserRoleByRoleIdAndUserId(adminRole.id, userLoggedId);
-
-      if(!userAdminRole && company.ownerId !== userLoggedId) {
-        throw new Error('You cannot list equipaments from this company');
       }
       
       const equipaments = await prisma.equipament.findMany({
