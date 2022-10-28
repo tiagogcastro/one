@@ -1,4 +1,5 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import { CompanyArea, Equipament } from '@prisma/client';
 import { findByRole } from 'src/modules/Roles/repositories/role-repositories';
 import { findById } from 'src/modules/User/repositories/user-repositories';
 import { findUserRoleByRoleIdAndUserId } from 'src/modules/User/repositories/user-role-repositories';
@@ -7,25 +8,12 @@ import { prisma } from 'src/shared/infra/prisma/client';
 export class CreateEquipamentController {
   public async handle({ request, response }: HttpContextContract) {
     const userLoggedId = request.user.id;
-   
+
+    let equipament: Equipament = {} as Equipament;
+    let companyArea: CompanyArea | null = {} as CompanyArea;
+
     try {
-      const { owner_company_id, equipament } = request.all();
-      
-      if(!owner_company_id) {
-        throw new Error('Please enter owner_company_id');
-      }
-
-      if(!equipament) {
-        throw new Error('Please enter equipament');
-      }
-
-      if(!equipament.capacity) {
-        throw new Error('Please enter equipament.capacity');
-      }
-
-      if(!equipament.name) {
-        throw new Error('Please enter equipament.name');
-      }
+      const { company_id, company_area, equipament_name, params } = request.all();
 
       const userLogged = await findById(userLoggedId);
 
@@ -39,35 +27,125 @@ export class CreateEquipamentController {
         throw new Error('Admin role not found');
       }
 
+      const isCompanyAdminRole = await findByRole('company.admin');
+
+      if(!isCompanyAdminRole) {
+        throw new Error('company.admin Role does not exist');
+      }
+
+      if(!company_id) {
+        throw new Error('Please enter company_id');
+      }
+
       const userAdminRole = await findUserRoleByRoleIdAndUserId(adminRole.id, userLoggedId);
+      const userIsAdminCompanyRole = await findUserRoleByRoleIdAndUserId(isCompanyAdminRole.id, userLoggedId);
 
       const company = await prisma.company.findFirst({
         where: {
-          ownerId: owner_company_id
+          id: company_id
         }
       });
 
       if(!company) {
-        throw new Error('Company does not exist');
+        throw new Error('Company not found');
       }
 
-      if(!userAdminRole && company?.ownerId !== userLoggedId) {
-        throw new Error('You does not owner this company');
-      }
-
-      const equipamentCreated = await prisma.equipament.create({
-        data: {
-          ...equipament,
-          companyId: company.id
-        },
-        include: {
-          company: true
+      const userCompany = await prisma.userCompany.findFirst({
+        where: {
+          userId: userLogged.id,
+          companyId: company_id,
         }
       });
-  
+      
+      if(!userAdminRole && !userIsAdminCompanyRole && !userCompany) {
+        throw new Error('You cannot add this user to this company');
+      }
+
+      if(!equipament_name) {
+        throw new Error('Please enter equipament_name');
+      }
+
+      if(!params.defaults) {
+        throw new Error('Please enter params.defaults');
+      }
+
+      const defaultParamsRequired = ["temperature", "temperature_setpoint", "volume", "recipe_name", "batch", "output_status", "connected"];
+      
+      const hasRequiredDefautls = defaultParamsRequired.map(prop => {
+        if(!params.defaults[prop]) {
+          return `Please enter params.defaults.${prop} value`;
+        }
+
+        if(!params.defaults.hasOwnProperty(prop)) {
+          return `Please enter params.defaults.${prop}`;
+        }
+      }).filter(Boolean);
+      
+      if(hasRequiredDefautls.length > 0) {
+        return {
+          error: hasRequiredDefautls
+        }
+      }
+
+      if(!company_area) {
+        throw new Error('Please enter company_area');
+      }
+
+      if(company_area.id && company_area.name || !company_area.id && !company_area.name) {
+        throw new Error('Please enter company_area.id or company_area.name');
+      }
+
+      if(company_area.name && !company_area.id) {
+        companyArea = await prisma.companyArea.create({
+          data: {
+            name: company_area.name,
+            companyId: company_id,
+          }
+        });
+      }
+
+      if(company_area.id && !company_area.name) {
+        companyArea = await prisma.companyArea.findUnique({
+          where: {
+            id: company_area.id,
+          }
+        });
+      }
+
+      if(companyArea) {
+        equipament = await prisma.equipament.create({
+          data: {
+            companyId: company_id,
+            companyAreaId: companyArea.id,
+            name: equipament_name,
+          },
+          include: {
+            company: true,
+            companyArea: true,
+          }
+        });
+      }
+
+      if(equipament) {
+        const equipamentParametersData = Object.entries(params.defaults).map(([key, value]: [string, string]) => {
+          return {
+            name: key,
+            value: String(value),
+            equipamentId: equipament?.id,
+            type: typeof value
+          }
+        });
+
+        await prisma.equipamentParameters.createMany({
+          data: equipamentParametersData,
+        });
+      }
+
       return response.status(201).json({
-        equipament: equipamentCreated,
-        userLogged,
+        equipament: {
+          ...equipament,
+          params 
+        },
       });
     } catch (error) {
       return response.status(403).json({error: error.message});

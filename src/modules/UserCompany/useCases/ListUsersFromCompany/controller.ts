@@ -56,6 +56,9 @@ export class ListUserFromCompanyController {
           user: {
             include: {
               UserPermission: {
+                where: {
+                  companyId: company_id
+                },
                 select: {
                   permission: true
                 },

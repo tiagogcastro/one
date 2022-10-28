@@ -87,6 +87,7 @@ model Company {
   UserCompany    UserCompany[]
   Equipament     Equipament[]
   UserPermission UserPermission[]
+  CompanyArea    CompanyArea[]
 
   @@map("company")
 }
@@ -103,17 +104,42 @@ model UserCompany {
   @@map("user_company")
 }
 
-model Equipament {
-  id         String   @id @default(uuid())
-  created_at DateTime @default(now())
-  updated_at DateTime @default(now())
-  name       String
-  setor      String?
-  offset     Decimal?
-  histerese  Decimal?
-  capacity   Float    @default(0)
-  company    Company  @relation(fields: [companyId], references: [id])
+model CompanyArea {
+  id         String       @id @default(uuid())
+  created_at DateTime     @default(now())
+  updated_at DateTime     @default(now())
+  company    Company      @relation(fields: [companyId], references: [id])
   companyId  String
+  name       String
+  Equipament Equipament[]
+
+  @@map("company_area")
+}
+
+model Equipament {
+  id                   String                 @id @default(uuid())
+  created_at           DateTime               @default(now())
+  updated_at           DateTime               @default(now())
+  name                 String?
+  hardwareId           String?
+  company              Company                @relation(fields: [companyId], references: [id])
+  companyId            String
+  companyArea          CompanyArea            @relation(fields: [companyAreaId], references: [id])
+  companyAreaId        String
+  EquipamentParameters EquipamentParameters[]
 
   @@map("equipament")
+}
+
+model EquipamentParameters {
+  id           String     @id @default(uuid())
+  created_at   DateTime   @default(now())
+  updated_at   DateTime   @default(now())
+  equipament   Equipament @relation(fields: [equipamentId], references: [id])
+  equipamentId String
+  name         String
+  value        String
+  type         String
+
+  @@map("equipament_parameters")
 }
