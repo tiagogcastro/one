@@ -111,6 +111,10 @@ export class CreateEquipamentController {
             id: company_area.id,
           }
         });
+
+        if(!companyArea) {
+          throw new Error('Company area not found');
+        }
       }
 
       if(companyArea) {
