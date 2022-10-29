@@ -9,15 +9,7 @@ export class DeleteEquipamentController {
     const userLoggedId = request.user.id;
 
     try {
-      const { owner_company_id, equipament_id } = request.qs();
-
-      if(!owner_company_id) {
-        throw new Error('Please enter owner_company_id');
-      }
-
-      if(!equipament_id) {
-        throw new Error('Please enter equipament_id');
-      }
+      const { company_id, equipament_id } = request.qs();
 
       const userLogged = await findById(userLoggedId);
 
@@ -31,20 +23,38 @@ export class DeleteEquipamentController {
         throw new Error('Admin role not found');
       }
 
+      const isCompanyAdminRole = await findByRole('company.admin');
+
+      if(!isCompanyAdminRole) {
+        throw new Error('company.admin Role does not exist');
+      }
+
+      if(!company_id) {
+        throw new Error('Please enter company_id');
+      }
+
       const userAdminRole = await findUserRoleByRoleIdAndUserId(adminRole.id, userLoggedId);
+      const userIsAdminCompanyRole = await findUserRoleByRoleIdAndUserId(isCompanyAdminRole.id, userLoggedId);
 
       const company = await prisma.company.findFirst({
         where: {
-          ownerId: owner_company_id
+          id: company_id
         }
       });
 
       if(!company) {
-        throw new Error('Company does not exist');
+        throw new Error('Company not found');
       }
 
-      if(!userAdminRole && company?.ownerId !== userLoggedId) {
-        throw new Error('You does not owner this company');
+      const userCompany = await prisma.userCompany.findFirst({
+        where: {
+          userId: userLogged.id,
+          companyId: company_id,
+        }
+      });
+      
+      if(!userAdminRole && !userIsAdminCompanyRole && !userCompany) {
+        throw new Error('You cannot add this user to this company');
       }
 
       const equipament = await prisma.equipament.findFirst({
