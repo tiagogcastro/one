@@ -65,20 +65,21 @@ export class CreateEquipamentController {
         throw new Error('Please enter equipament_name');
       }
 
-      if(!params.defaults) {
-        throw new Error('Please enter params.defaults');
+      if(!params) {
+        throw new Error('Please enter params');
       }
 
       const defaultParamsRequired = ["temperature", "temperature_setpoint", "volume", "recipe_name", "batch", "output_status", "connected"];
       
       const hasRequiredDefautls = defaultParamsRequired.map(prop => {
-        if(!params.defaults[prop]) {
-          return `Please enter params.defaults.${prop} value`;
+        if(!params[prop]) {
+          return `Please enter params.${prop} value`;
         }
 
-        if(!params.defaults.hasOwnProperty(prop)) {
-          return `Please enter params.defaults.${prop}`;
+        if(!params.hasOwnProperty(prop)) {
+          return `Please enter params.${prop}`;
         }
+
       }).filter(Boolean);
       
       if(hasRequiredDefautls.length > 0) {
@@ -127,7 +128,7 @@ export class CreateEquipamentController {
       }
 
       if(equipament) {
-        const equipamentParametersData = Object.entries(params.defaults).map(([key, value]: [string, string]) => {
+        const equipamentParametersData = Object.entries(params).map(([key, value]: [string, string]) => {
           return {
             name: key,
             value: String(value),

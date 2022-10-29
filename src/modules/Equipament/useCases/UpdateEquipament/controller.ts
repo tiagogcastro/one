@@ -93,7 +93,7 @@ export class UpdateEquipamentController {
         }
       });
 
-      const defaultEquipamentParams = Object.entries(params.defaults).map(async ([key, value]: [string, string]) => {
+      const defaultEquipamentParams = Object.entries(params).map(async ([key, value]: [string, string]) => {
         const founded = foundEquipamentsParams.find(foundParam => foundParam.name === key);
 
         if(founded) {
