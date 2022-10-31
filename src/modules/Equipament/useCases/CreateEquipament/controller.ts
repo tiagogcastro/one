@@ -79,6 +79,22 @@ export class CreateEquipamentController {
         if(!params[prop]) {
           return `Please enter params.${prop} value`;
         }
+
+        if(prop === "temperature" && typeof params[prop] !== "number") {
+          return `Please enter a number value params on params.${prop}`
+        }
+
+        if(prop === "temperature_setpoint" && typeof params[prop] !== "number") {
+          return `Please enter a number value params on params.${prop}`
+        }
+
+        if(prop === "output_status" && typeof params[prop] !== "boolean") {
+          return `Please enter a boolean value params on params.${prop}`
+        }
+
+        if(prop === "connected" && typeof params[prop] !== "boolean") {
+          return `Please enter a boolean value params on params.${prop}`
+        }
       }).filter(Boolean);
       
       if(hasRequiredDefautls.length > 0) {
