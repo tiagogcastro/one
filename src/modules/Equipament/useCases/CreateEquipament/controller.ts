@@ -72,14 +72,13 @@ export class CreateEquipamentController {
       const defaultParamsRequired = ["temperature", "temperature_setpoint", "volume", "recipe_name", "batch", "output_status", "connected", "process_status"];
       
       const hasRequiredDefautls = defaultParamsRequired.map(prop => {
-        if(!params[prop]) {
-          return `Please enter params.${prop} value`;
-        }
-
         if(!params.hasOwnProperty(prop)) {
           return `Please enter params.${prop}`;
         }
 
+        if(!params[prop]) {
+          return `Please enter params.${prop} value`;
+        }
       }).filter(Boolean);
       
       if(hasRequiredDefautls.length > 0) {
