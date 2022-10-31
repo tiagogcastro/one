@@ -69,7 +69,7 @@ export class CreateEquipamentController {
         throw new Error('Please enter params');
       }
 
-      const defaultParamsRequired = ["temperature", "temperature_setpoint", "volume", "recipe_name", "batch", "output_status", "connected"];
+      const defaultParamsRequired = ["temperature", "temperature_setpoint", "volume", "recipe_name", "batch", "output_status", "connected", "process_status"];
       
       const hasRequiredDefautls = defaultParamsRequired.map(prop => {
         if(!params[prop]) {
