@@ -19,16 +19,7 @@ const animate = keyframes`
     }
 `;
 
-export const Container = MStyled(MuiBox)({
-  //height: '100vh',
-  backgroundColor: '#fff',
-  color: '#ddd',
-}) as typeof MuiBox;
-
 export const Paper = MStyled(MuiPaper)({}) as typeof MuiPaper;
-
-export const Content = MStyled(MuiBox)({}) as typeof MuiBox;
-//margin-left: 100px;
 
 export const Form = styled(Unform)`
   min-width: 370px;
