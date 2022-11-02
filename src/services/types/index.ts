@@ -25,7 +25,27 @@ export interface Company {
   ownerId: string;
 }
 
-export interface Equipament {}
+export interface Equipament {
+  id: string;
+  name: string;
+  companyAreaId: string;
+  hardwareId: string | null;
+  updated_at: string;
+  created_at: string;
+  params: {
+    volume: string | null | boolean | number;
+    recipe_name: string | null | boolean | number;
+    batch: string | null | boolean | number;
+    output_status: string | null | boolean | number;
+
+    temperature: number;
+    temperature_setpoint: number;
+    histerese: number;
+    offset: number;
+    connected: boolean;
+    process_status: boolean;
+  };
+}
 
 export interface UserCompany {
   id: string;
