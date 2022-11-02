@@ -5,6 +5,7 @@ import { findByEmail, findById } from '../../repositories/user-repositories';
 import { findByRole } from 'src/modules/Roles/repositories/role-repositories';
 import { findUserRoleByRoleIdAndUserId } from '../../repositories/user-role-repositories';
 import { prisma } from 'src/shared/infra/prisma/client';
+import { userInstanceToInstance } from 'src/shared/utils/instanceToInstance';
 
 export class AdminAuthViewAsClientController {
   public async handle({ request, response }: HttpContextContract) {
@@ -71,7 +72,7 @@ export class AdminAuthViewAsClientController {
       return {
         token,
         user: {
-          ...user,
+          ...userInstanceToInstance(user),
           userRoles,
           userPermissions,
         },

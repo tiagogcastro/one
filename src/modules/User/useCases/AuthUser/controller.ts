@@ -3,6 +3,7 @@ import { jwtConfig } from '../../../../../config/jwt';
 import { sign } from 'jsonwebtoken';
 import { findAllUserInfoByEmail } from '../../repositories/user-repositories';
 import bcrypt from 'bcrypt';
+import { userInstanceToInstance } from 'src/shared/utils/instanceToInstance';
 
 export class AuthUserController {
   public async login({ request, response }: HttpContextContract) {
@@ -29,7 +30,7 @@ export class AuthUserController {
 
       return {
         token,
-        user,
+        user: userInstanceToInstance(user),
       }
     } catch(error) {
       return response

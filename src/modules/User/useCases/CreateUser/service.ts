@@ -4,6 +4,7 @@ import { prisma } from 'src/shared/infra/prisma/client';
 import { findByEmail } from '../../repositories/user-repositories';
 import bcrypt from 'bcrypt';
 import { Company } from '@prisma/client';
+import { userInstanceToInstance } from 'src/shared/utils/instanceToInstance';
 
 export interface CreateUserData {
   name: string;
@@ -139,7 +140,7 @@ export class CreateUserService {
     });
 
     return {
-      user,
+      user: userInstanceToInstance(user),
       company
     };
   }

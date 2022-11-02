@@ -1,6 +1,7 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext';
 
 import { prisma } from 'src/shared/infra/prisma/client'
+import { userInstanceToInstance } from 'src/shared/utils/instanceToInstance';
 import { findAllUserInfoById } from '../../repositories/user-repositories';
 
 export class UserListingController {
@@ -23,7 +24,7 @@ export class UserListingController {
         },
       }
     })
-    return users
+    return userInstanceToInstance(users)
   }
   public async show({ request, response }: HttpContextContract) {
     try {
@@ -35,7 +36,7 @@ export class UserListingController {
         throw new Error('User not found');
       }
 
-      return user;
+      return userInstanceToInstance(user);
     } catch (error) {
       return response
         .status(400)
