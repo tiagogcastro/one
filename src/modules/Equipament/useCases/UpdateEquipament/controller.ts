@@ -65,10 +65,34 @@ export class UpdateEquipamentController {
         throw new Error('Please enter equipament_id');
       }
 
+      const isRequiredValues = Object.entries(params).map(([prop]: [string, string]) => {
+        if(prop === "temperature" && typeof params[prop] !== "number") {
+          return `Please enter a number value params on params.${prop}`
+        }
+
+        if(prop === "temperature_setpoint" && typeof params[prop] !== "number") {
+          return `Please enter a number value params on params.${prop}`
+        }
+
+        if(prop === "output_status" && typeof params[prop] !== "boolean") {
+          return `Please enter a boolean value params on params.${prop}`
+        }
+
+        if(prop === "connected" && typeof params[prop] !== "boolean") {
+          return `Please enter a boolean value params on params.${prop}`
+        }
+      }).filter(Boolean);
+      
+      if(isRequiredValues.length > 0) {
+        return {
+          error: isRequiredValues
+        }
+      }
+
       equipament = await prisma.equipament.findUnique({
         where: {
           id: equipament_id,
-        }
+        },
       });
       
       if(!equipament) {
@@ -80,11 +104,15 @@ export class UpdateEquipamentController {
         name: equipament_name || equipament.name
       };
 
-      const equipamentUpdated = await prisma.equipament.update({
+      equipament = await prisma.equipament.update({
         where: {
           id: equipament_id,
         },
-        data: equipament
+        data: equipament,
+        include: {
+          company: true,
+          companyArea: true,
+        }
       });
 
       let foundEquipamentsParams = await prisma.equipamentParameters.findMany({
@@ -134,8 +162,10 @@ export class UpdateEquipamentController {
       }, {});
   
       return response.status(201).json({
-        equipament: equipamentUpdated,
-        params: equipamentParams,
+        equipament: {
+          ...equipament,
+          params: equipamentParams,
+        },
       });
     } catch (error) {
       console.log({error})
