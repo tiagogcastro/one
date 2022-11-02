@@ -4,11 +4,8 @@ import React from 'react';
 import { EquipamentsContainer } from '../../../components/EquipamentsContainer';
 import Header from '../../../components/Layouts/Header/Header';
 import { SideBar } from '../../../components/Sidebar';
-import { useAuth } from '../../../hooks/useAuth';
 
 const Home: React.FC = () => {
-  const { user, signOut } = useAuth();
-
   return (
     <Box>
       <Header />
