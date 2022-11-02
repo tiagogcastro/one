@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Container, HeaderInfo } from './styles';
+import * as Styles from './styles';
 
 interface IProps {
   children?: React.ReactNode;
@@ -8,9 +8,11 @@ interface IProps {
 
 const Header: React.FC<IProps> = () => {
   return (
-    <Container>
-      <HeaderInfo>Header</HeaderInfo>
-    </Container>
+    <Styles.Container>
+      <Styles.HeaderContent>
+        <Styles.Logo src="/nou_logo.svg" />
+      </Styles.HeaderContent>
+    </Styles.Container>
   );
 };
 export default Header;

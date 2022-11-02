@@ -1,23 +1,22 @@
 import styled from 'styled-components';
 
 export const Container = styled.header`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   background: #222;
-  box-shadow: 0px 0px 20px #111;
-  height: 4vmax;
-  padding: 0 10px;
+
+  height: 80px;
+  width: 100%;
 `;
 
-export const HeaderInfo = styled.div`
+export const HeaderContent = styled.div`
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 100%;
 `;
 
 export const Logo = styled.img`
-  width: 10vmax;
-  height: 3vmax;
+  height: 100%;
 `;
 
 export const Divider = styled.div`
