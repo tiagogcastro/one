@@ -69,7 +69,7 @@ export class CreateEquipamentController {
         throw new Error('Please enter params');
       }
 
-      const defaultParamsRequired = ["temperature", "temperature_setpoint", "volume", "recipe_name", "batch", "output_status", "connected", "process_status"];
+      const defaultParamsRequired = ["temperature", "temperature_setpoint", "volume", "recipe_name", "batch", "output_status", "connected", "process_status", "histerese", "offset"];
       
       const hasRequiredDefautls = defaultParamsRequired.map(prop => {
         if(!params.hasOwnProperty(prop)) {
@@ -80,20 +80,20 @@ export class CreateEquipamentController {
           return `Please enter params.${prop} value`;
         }
 
-        if(prop === "temperature" && typeof params[prop] !== "number") {
-          return `Please enter a number value params on params.${prop}`
-        }
+        const struct = {
+          temperature: "number",
+          temperature_setpoint: "number",
+          offset: "number",
+          histerese: "number",
+          output_status: "boolean",
+          connected: "boolean"
+        };
+        
+        const shouldParamType = struct[prop];
+        const paramType = typeof params[prop];
 
-        if(prop === "temperature_setpoint" && typeof params[prop] !== "number") {
-          return `Please enter a number value params on params.${prop}`
-        }
-
-        if(prop === "output_status" && typeof params[prop] !== "boolean") {
-          return `Please enter a boolean value params on params.${prop}`
-        }
-
-        if(prop === "connected" && typeof params[prop] !== "boolean") {
-          return `Please enter a boolean value params on params.${prop}`
+        if(shouldParamType && paramType !== shouldParamType) {
+          return `Please enter a ${shouldParamType} value params on params.${prop}`
         }
       }).filter(Boolean);
       
