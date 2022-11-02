@@ -4,7 +4,7 @@ import { useAuth } from '../hooks/useAuth';
 import { AdminDashboardPage } from '../pages/AdminPages/Dashboard';
 import { SignInUserPage } from '../pages/Auth/SignInUser';
 import { SignUpUserPage } from '../pages/Auth/SignUpUser';
-import Home from '../pages/UserPages/Home/Home';
+import Home from '../pages/UserPages/Dashboard';
 import { UniqueEquipamentPage } from '../pages/UserPages/UniqueEquipamentPage';
 import { notFoundRedirectPath } from '../utils/notFoundRedirectPath';
 import { AdminRoute } from './AdminRoute';
