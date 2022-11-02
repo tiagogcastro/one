@@ -128,8 +128,8 @@ export class UpdateEquipamentController {
           const result = await prisma.equipamentParameters.update({
             data: {
               ...founded,
-              value: String(value),
-              type: typeof value, 
+              value: value ? String(value) : founded.value,
+              type: value ? typeof value : founded.type, 
             },
             where: {
               id: founded.id
