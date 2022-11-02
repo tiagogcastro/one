@@ -7,16 +7,14 @@ export type PrivateRouteProps = {
 };
 
 export function CompanyAdminRoute({ redirect_to = '/login' }: PrivateRouteProps) {
-  const { user } = useAuth();
+  const { isUserAdmin, isUserCompanyAdmin } = useAuth();
 
-  const validateRoles = ['admin', 'company.admin'];
+  if (!isUserCompanyAdmin && isUserAdmin) {
+    return <Navigate to={'/admin/dashboard' || redirect_to} />;
+  }
 
-  const isAdminOrCompanyOwner = user?.UserRole.find((where) => {
-    return validateRoles.includes(where.role.role);
-  });
-
-  if (!isAdminOrCompanyOwner) {
-    return <Navigate to={redirect_to} />;
+  if (!isUserCompanyAdmin && !isUserAdmin) {
+    return <Navigate to={'/login' || redirect_to} />;
   }
 
   return <Outlet />;

@@ -7,13 +7,9 @@ export type AdminRouteProps = {
 };
 
 export function AdminRoute({ redirect_to = '/login' }: AdminRouteProps) {
-  const { user } = useAuth();
+  const { isUserAdmin } = useAuth();
 
-  const validateRoles = ['admin'];
-
-  const isAdmin = user?.UserRole.find((where) => validateRoles.includes(where.role.role));
-
-  if (!isAdmin) {
+  if (!isUserAdmin) {
     return <Navigate to={redirect_to} />;
   }
 

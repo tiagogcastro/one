@@ -6,18 +6,20 @@ export type CompanyGeralRouteProps = {
   redirect_to?: string;
 };
 
-export function CompanyGeralRoute({ redirect_to = '/profile' }: CompanyGeralRouteProps) {
-  const { user } = useAuth();
-
-  const validateRoles = ['admin', 'company.admin'];
-
-  const isAdminOrCompanyOwner = user?.UserRole.find((where) => {
-    return validateRoles.includes(where.role.role);
-  });
+export function CompanyGeralRoute({ redirect_to = '/' }: CompanyGeralRouteProps) {
+  const { user, isUserAdmin, isUserCompanyAdmin } = useAuth();
 
   const itsPartOfTheCompany = user?.UserCompany.find((where) => where.userId === user.id);
 
-  if (isAdminOrCompanyOwner || itsPartOfTheCompany) {
+  if (!itsPartOfTheCompany && isUserAdmin) {
+    return <Navigate to={'/admin/dashboard' || redirect_to} />;
+  }
+
+  if (!isUserCompanyAdmin && !itsPartOfTheCompany && !isUserAdmin) {
+    return <Navigate to={'/login' || redirect_to} />;
+  }
+
+  if (isUserCompanyAdmin || itsPartOfTheCompany) {
     return <Outlet />;
   }
 
