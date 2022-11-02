@@ -18,6 +18,9 @@ type AuthContextData = {
   loading: boolean;
   isLogged: boolean;
 
+  isUserAdmin: boolean;
+  isUserCompanyAdmin: boolean;
+
   signIn(credentials: SignInData): Promise<SignInResponseData | undefined>;
   register(credentials: RegisterUserData): Promise<RegisterUserResponseData | undefined>;
   signOut(): void;
@@ -36,6 +39,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<UserData | null>(null);
   const [token, setToken] = useState<string | null>(storageToken);
   const [isLogged, setIsLogged] = useState(false);
+  const [isUserAdmin, setIsUserAdmin] = useState(false);
+  const [isUserCompanyAdmin, setIsUserCompanyAdmin] = useState(false);
 
   const [loading, setLoading] = useState(true);
 
@@ -43,12 +48,24 @@ export function AuthProvider({ children }: AuthProviderProps) {
     try {
       const response = await nouApi.get<UserData | undefined>('/users/list-unique');
 
-      const user = response.data;
+      const userData = response.data;
 
-      if (user) {
+      if (userData) {
         setIsLogged(true);
+        setUser(userData);
 
-        return user;
+        const isCompanyAdmin = user?.UserRole.find((where) => {
+          return where.role.role === 'company.admin';
+        });
+
+        const isAdmin = user?.UserRole.find((where) => {
+          return where.role.role === 'admin';
+        });
+
+        setIsUserCompanyAdmin(!!isCompanyAdmin);
+        setIsUserAdmin(!!isAdmin);
+
+        return userData;
       }
     } catch (error: any) {
       signOut();
@@ -60,11 +77,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   useEffect(() => {
     nouApi.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 
-    getUser()
-      .then((response) => {
-        setUser(response || null);
-      })
-      .finally(() => setLoading(false));
+    getUser();
   }, [token]);
 
   async function signIn(
@@ -139,6 +152,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
         token,
         loading,
         isLogged,
+
+        isUserAdmin,
+        isUserCompanyAdmin,
       }}
     >
       {children}
