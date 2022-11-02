@@ -1,4 +1,5 @@
 import { Box, TextField, Typography } from '@mui/material';
+import { TextFieldProps } from 'material-ui';
 import React, { forwardRef } from 'react';
 import { FieldError } from 'react-hook-form';
 
@@ -7,10 +8,11 @@ export interface InputProps {
   type?: React.HTMLInputTypeAttribute;
   error?: FieldError;
   labelText?: string;
+  defaultValue?: any;
 }
 
-const InputBase: React.ForwardRefRenderFunction<HTMLInputElement, InputProps> = (
-  { name, type, error = null, labelText, ...rest },
+const InputBase: React.ForwardRefRenderFunction<TextFieldProps, InputProps> = (
+  { name, type, error = null, defaultValue, labelText, ...rest },
   ref,
 ) => {
   return (
@@ -21,7 +23,8 @@ const InputBase: React.ForwardRefRenderFunction<HTMLInputElement, InputProps> = 
         type={type}
         label={labelText}
         fullWidth
-        {...rest}
+        defaultValue={defaultValue}
+        {...(rest as any)}
       />
       {!!error && <Typography color="red">{error.message}</Typography>}
     </Box>
