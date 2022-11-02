@@ -37,9 +37,11 @@ module.exports = {
     'jsx-a11y/accessible-emoji': 'off',
     'react/prop-types': 'off',
     '@typescript-eslint/explicit-function-return-type': 'off',
-    'simple-import-sort/imports': 'error',
+    'simple-import-sort/imports': 'off',
     'simple-import-sort/exports': 'error',
     'no-unused-vars': 'off',
+    'no-extra-boolean-cast': 'off',
+    'jsx-a11y/tabindex-no-positive': 'off',
     'jsx-a11y/anchor-is-valid': [
       'error',
       {
