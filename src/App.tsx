@@ -1,20 +1,19 @@
 import 'react-toastify/dist/ReactToastify.css';
 
+import { ThemeProvider } from '@mui/material';
 import { ToastContainer } from 'react-toastify';
-import { ThemeProvider } from 'styled-components';
 
 import { AuthProvider } from './context';
 import { AppRouter } from './routes';
 import GlobalStyles from './styles/global';
-import lightCustom from './styles/themes/light';
+import light from './styles/themes/light';
 
 function App() {
   return (
     <>
       <AuthProvider>
-        <ThemeProvider theme={lightCustom}>
-          <GlobalStyles />
-
+        <GlobalStyles />
+        <ThemeProvider theme={light}>
           <ToastContainer />
 
           <AppRouter />
