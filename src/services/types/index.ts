@@ -5,6 +5,8 @@ export interface User {
   username: string;
   email: string;
   password: string;
+  avatar: string | null;
+  avatar_url: string | null;
 }
 
 export interface Role {
@@ -23,6 +25,7 @@ export interface Company {
   updated_at: string;
   name: string;
   ownerId: string;
+  UserPermission: UserPermission[];
 }
 
 export interface Equipament {
@@ -50,7 +53,7 @@ export interface Equipament {
 export interface UserCompany {
   id: string;
   userId: string;
-  company: Company;
+  companyId: string;
 }
 
 export interface UserPermission {
@@ -65,6 +68,6 @@ export interface UserRole {
 
 export interface UserData extends User {
   UserCompany: UserCompany[];
-  UserPermission: UserPermission[];
   UserRole: UserRole[];
+  Company: Company[];
 }

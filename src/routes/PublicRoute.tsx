@@ -6,7 +6,7 @@ export type PublicRouteProps = {
   redirect_to?: string;
 };
 
-export function PublicRoute({ redirect_to = '/dashboard' }: PublicRouteProps) {
+export function PublicRoute({ redirect_to = '/client/dashboard' }: PublicRouteProps) {
   const { user } = useAuth();
 
   if (user) {

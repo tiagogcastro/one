@@ -1,11 +1,16 @@
 import { useState } from 'react';
 import { BsHouseDoor } from 'react-icons/bs';
 import { FiUsers } from 'react-icons/fi';
+import { GoSignOut } from 'react-icons/go';
+import { FaUser } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../../hooks/useAuth';
 
 import * as Styles from './styles';
 
 export function SideBar() {
+  const { isUserAdmin, isUserCompanyAdmin, signOut, itsPartOfTheCompany } = useAuth();
+
   const [sideBar, setSideBar] = useState(false);
 
   function handleChangeSideBar() {
@@ -19,12 +24,43 @@ export function SideBar() {
           <Styles.ClosedSideBar onMouseEnter={handleChangeSideBar}>
             <nav className="sidebar_principal_links">
               <ul>
-                <Link to="/dashboard" title="Dashboard">
-                  <BsHouseDoor />
+                {isUserAdmin && (
+                  <>
+                    <Link to="/admin/dashboard" title="Dashboard">
+                      <BsHouseDoor />
+                    </Link>
+                    <Link to="/admin/dashboard" title="Lista de usuários">
+                      <FiUsers />
+                    </Link>
+                  </>
+                )}
+
+                {isUserCompanyAdmin && (
+                  <>
+                    <Link to="/admin/dashboard" title="Dashboard">
+                      <BsHouseDoor />
+                    </Link>
+                    <Link to="/admin/dashboard" title="Lista de usuários da empresa">
+                      <FiUsers />
+                    </Link>
+                  </>
+                )}
+
+                {itsPartOfTheCompany && (
+                  <>
+                    <Link to="/client/dashboard" title="Dashboard">
+                      <BsHouseDoor />
+                    </Link>
+                  </>
+                )}
+              </ul>
+              <ul>
+                <Link to="/profile" title="Meu Perfil">
+                  <FaUser />
                 </Link>
-                <Link to="/" title="Lista de usuários">
-                  <FiUsers />
-                </Link>
+                <button onClick={signOut}>
+                  <GoSignOut />
+                </button>
               </ul>
             </nav>
           </Styles.ClosedSideBar>
@@ -33,14 +69,47 @@ export function SideBar() {
             <section>
               <nav className="sidebar_principal_links">
                 <ul>
-                  <Link to="/dashboard" title="Dashboard">
-                    <BsHouseDoor />
-                    Dashboard
+                  {isUserAdmin && (
+                    <>
+                      <Link to="/admin/dashboard" title="Dashboard">
+                        <BsHouseDoor />
+                        Dashboard
+                      </Link>
+                      <Link to="/admin/dashboard" title="Lista de usuários">
+                        <FiUsers />
+                        Usuários da empresa
+                      </Link>
+                    </>
+                  )}
+
+                  {isUserCompanyAdmin && (
+                    <>
+                      <Link to="/admin/dashboard" title="Dashboard">
+                        <BsHouseDoor />
+                      </Link>
+                      <Link to="/admin/dashboard" title="Lista de usuários da empresa">
+                        <FiUsers />
+                      </Link>
+                    </>
+                  )}
+
+                  {itsPartOfTheCompany && (
+                    <>
+                      <Link to="/client/dashboard" title="Dashboard">
+                        <BsHouseDoor />
+                        Dashboard
+                      </Link>
+                    </>
+                  )}
+                </ul>
+                <ul>
+                  <Link to="/profile" title="Meu Perfil">
+                    <FaUser />
+                    Meu Perfil
                   </Link>
-                  <Link to="/" title="Usuários da empresa">
-                    <FiUsers />
-                    Usuários da empresa
-                  </Link>
+                  <button onClick={signOut}>
+                    <GoSignOut /> Sair da conta
+                  </button>
                 </ul>
               </nav>
             </section>

@@ -10,6 +10,7 @@ import { Input } from '../../../components/Forms/Input';
 import Header from '../../../components/Layouts/Header/Header';
 import { SideBar } from '../../../components/Sidebar';
 import { a11yProps, TabPanel } from '../../../components/Tabs/TabPanel';
+import { useAuth } from '../../../hooks/useAuth';
 import { Company, Equipament as EquipamentInterface, nouApi } from '../../../services';
 import { apiError } from '../../../utils/formatApiError';
 
@@ -19,6 +20,8 @@ export interface EquipamentResponse {
 }
 
 export function UniqueEquipamentPage() {
+  const { user } = useAuth();
+
   const [data, setEquipament] = useState<EquipamentResponse | null>(null);
 
   const params = useParams();
@@ -39,14 +42,22 @@ export function UniqueEquipamentPage() {
         {
           params: {
             equipament_id: equipamentId,
-            company_id: '83b7eb03-97da-444c-9dc0-799336aaff54',
+            company_id: user?.UserCompany[0].id,
           },
         },
       );
 
       setEquipament(response.data);
     } catch (error) {
-      console.log(error);
+      const errors = apiError(error);
+
+      errors.messages.forEach((message) => {
+        toast.error(message, {
+          style: {
+            background: '#222222',
+          },
+        });
+      });
       navigate('/dashboard');
     }
   }

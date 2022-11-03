@@ -1,10 +1,13 @@
+import { useEffect, useState } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
+import { UserListProvider } from '../context/users/UserListContext';
 
 import { useAuth } from '../hooks/useAuth';
 import { AdminDashboardPage } from '../pages/AdminPages/Dashboard';
 import { SignInUserPage } from '../pages/Auth/SignInUser';
 import { SignUpUserPage } from '../pages/Auth/SignUpUser';
 import Home from '../pages/UserPages/Dashboard';
+import { ProfilePage } from '../pages/UserPages/Profile';
 import { UniqueEquipamentPage } from '../pages/UserPages/UniqueEquipamentPage';
 import { notFoundRedirectPath } from '../utils/notFoundRedirectPath';
 import { AdminRoute } from './AdminRoute';
@@ -27,8 +30,17 @@ export function Routers() {
         </Route>
 
         <Route element={<PrivateRoute />}>
+          <Route element={<ProfilePage />} path="profile" />
+
           <Route element={<AdminRoute />} path="admin">
-            <Route element={<AdminDashboardPage />} path="dashboard" />
+            <Route
+              element={
+                <UserListProvider>
+                  <AdminDashboardPage />
+                </UserListProvider>
+              }
+              path="dashboard"
+            />
 
             <Route element={<SignUpUserPage />} path="users/register" />
           </Route>

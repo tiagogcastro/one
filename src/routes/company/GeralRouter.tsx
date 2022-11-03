@@ -16,7 +16,7 @@ export function CompanyGeralRoute({ redirect_to = '/' }: CompanyGeralRouteProps)
   }
 
   if (!isUserCompanyAdmin && !itsPartOfTheCompany && !isUserAdmin) {
-    return <Navigate to={'/login' || redirect_to} />;
+    return <Navigate to={'/profile' || redirect_to} />;
   }
 
   if (isUserCompanyAdmin || itsPartOfTheCompany) {

@@ -32,14 +32,11 @@ export const ClosedSideBar = styled.aside`
     }
   }
 
-  ul li {
-    cursor: pointer;
-  }
-
   .sidebar_principal_links {
     display: flex;
     align-items: center;
     flex-direction: column;
+    justify-content: space-between;
     width: 100%;
 
     ul {
@@ -54,6 +51,32 @@ export const ClosedSideBar = styled.aside`
       gap: 8px;
 
       a {
+        max-width: 48px;
+        max-height: 48px;
+        height: 100%;
+        width: 100%;
+        padding: 16px 0;
+        border-radius: 8px;
+
+        background: #49494e;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        transition: background 0.3s;
+
+        &:hover {
+          filter: brightness(90%);
+        }
+
+        svg {
+          width: 20px;
+          height: 20px;
+        }
+      }
+
+      button {
         max-width: 48px;
         max-height: 48px;
         height: 100%;
@@ -102,10 +125,6 @@ export const OpenSideBar = styled.aside`
     }
   }
 
-  ul li {
-    cursor: pointer;
-  }
-
   section {
     display: flex;
     align-items: flex-start;
@@ -118,15 +137,12 @@ export const OpenSideBar = styled.aside`
 
     background: #222222;
 
-    ul li {
-      cursor: pointer;
-    }
-
     .sidebar_principal_links {
       display: flex;
       align-items: center;
       flex-direction: column;
       width: 100%;
+      justify-content: space-between;
 
       ul {
         width: 100%;
@@ -140,6 +156,33 @@ export const OpenSideBar = styled.aside`
         gap: 8px;
 
         a {
+          width: 100%;
+          max-height: 48px;
+          height: 100%;
+          width: 100%;
+          padding: 16px 0 16px 8px;
+          border-radius: 8px;
+
+          background: #49494e;
+
+          display: flex;
+          align-items: center;
+          justify-content: flex-start;
+          gap: 8px;
+
+          transition: background 0.3s;
+
+          &:hover {
+            filter: brightness(90%);
+          }
+
+          svg {
+            width: 20px;
+            height: 20px;
+          }
+        }
+
+        button {
           width: 100%;
           max-height: 48px;
           height: 100%;

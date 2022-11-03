@@ -3,8 +3,8 @@ import React, { Suspense, useState } from 'react';
 
 //import NouBg from '../../../assets/nou-beer-bg.png';
 import Particles from '../../../components/Particles/Particles';
-const SignIn = React.lazy(() => import('../SignInUser/SignInUser'));
-const SignUp = React.lazy(() => import('../SignUpUser/SignUpUser'));
+const SignIn = React.lazy(() => import('../SignInUser'));
+const SignUp = React.lazy(() => import('../SignUpUser'));
 const VerifyEmail = React.lazy(() => import('../VerifyEmail/VerifyEmail'));
 import { Container, Paper } from './styles';
 

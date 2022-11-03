@@ -41,7 +41,7 @@ export function SignInUserPage() {
   const handleSignIn: SubmitHandler<SignInData> = async (data) => {
     await signIn(data);
 
-    navigateTo('/dashboard');
+    navigateTo('/client/dashboard');
   };
 
   return (

@@ -1,6 +1,7 @@
 import { Box } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../../hooks/useAuth';
 
 import { Company, Equipament as EquipamentInterface } from '../../services';
 import { nouApi } from '../../services/clientApi';
@@ -12,13 +13,15 @@ export interface EquipamentsResponse {
 }
 
 export function EquipamentsContainer() {
+  const { user } = useAuth();
+
   const [equipaments, setEquipaments] = useState<EquipamentsResponse | null>(null);
 
   async function getEquipaments() {
     try {
       const response = await nouApi.get<EquipamentsResponse | null>('/equipament/list', {
         params: {
-          company_id: '83b7eb03-97da-444c-9dc0-799336aaff54',
+          company_id: user?.UserCompany[0].companyId,
         },
       });
 

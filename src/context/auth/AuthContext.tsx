@@ -1,5 +1,5 @@
 import { AxiosError } from 'axios';
-import { createContext, ReactNode, useEffect, useState } from 'react';
+import { createContext, ReactNode, useEffect, useLayoutEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import * as Yup from 'yup';
 
@@ -20,6 +20,7 @@ type AuthContextData = {
 
   isUserAdmin: boolean;
   isUserCompanyAdmin: boolean;
+  itsPartOfTheCompany: boolean;
 
   signIn(credentials: SignInData): Promise<SignInResponseData | undefined>;
   register(credentials: RegisterUserData): Promise<RegisterUserResponseData | undefined>;
@@ -33,16 +34,37 @@ type AuthProviderProps = {
 
 export const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 
+export function getUserValidations(user: UserData | null) {
+  const isUserCompanyAdmin = !!user?.UserRole.find((where) => {
+    return where.role.role === 'company.admin';
+  });
+
+  const isUserAdmin = !!user?.UserRole.find((where) => {
+    return where.role.role === 'admin';
+  });
+
+  const itsPartOfTheCompany = !!user?.UserCompany.find(
+    (where) => where.userId === user.id,
+  );
+
+  return {
+    isUserCompanyAdmin,
+    isUserAdmin,
+    itsPartOfTheCompany,
+  };
+}
+
 export function AuthProvider({ children }: AuthProviderProps) {
   const storageToken = localStorage.getItem(nouApiStorageKey);
 
   const [user, setUser] = useState<UserData | null>(null);
   const [token, setToken] = useState<string | null>(storageToken);
   const [isLogged, setIsLogged] = useState(false);
-  const [isUserAdmin, setIsUserAdmin] = useState(false);
-  const [isUserCompanyAdmin, setIsUserCompanyAdmin] = useState(false);
 
   const [loading, setLoading] = useState(true);
+
+  const { isUserAdmin, isUserCompanyAdmin, itsPartOfTheCompany } =
+    getUserValidations(user);
 
   async function getUser() {
     try {
@@ -50,27 +72,15 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
       const userData = response.data;
 
-      if (userData) {
-        setIsLogged(true);
-        setUser(userData);
-
-        const isCompanyAdmin = user?.UserRole.find((where) => {
-          return where.role.role === 'company.admin';
-        });
-
-        const isAdmin = user?.UserRole.find((where) => {
-          return where.role.role === 'admin';
-        });
-
-        setIsUserCompanyAdmin(!!isCompanyAdmin);
-        setIsUserAdmin(!!isAdmin);
-
-        return userData;
-      }
-    } catch (error: any) {
-      signOut();
-    } finally {
+      setIsLogged(true);
+      setUser(userData || null);
       setLoading(false);
+
+      return userData;
+    } catch (error: any) {
+      setLoading(false);
+
+      return error;
     }
   }
 
@@ -78,7 +88,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     nouApi.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 
     getUser();
-  }, [token]);
+  }, []);
 
   async function signIn(
     credentials: SignInData,
@@ -95,7 +105,11 @@ export function AuthProvider({ children }: AuthProviderProps) {
       localStorage.setItem(nouApiStorageKey, token);
       nouApi.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 
-      toast.success('Sucesso! Que bom ter-lo de volta aqui.');
+      toast.success('Sucesso! Que bom ter-lo de volta aqui.', {
+        style: {
+          background: '#222222',
+        },
+      });
 
       return response.data;
     } catch (error: any) {
@@ -105,7 +119,11 @@ export function AuthProvider({ children }: AuthProviderProps) {
         });
       } else {
         const axiosErrorMessage = error.response.data.error;
-        toast.error(axiosErrorMessage);
+        toast.error(axiosErrorMessage, {
+          style: {
+            background: '#222222',
+          },
+        });
       }
     }
   }
@@ -155,6 +173,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
         isUserAdmin,
         isUserCompanyAdmin,
+        itsPartOfTheCompany,
       }}
     >
       {children}
