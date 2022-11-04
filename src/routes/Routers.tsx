@@ -51,6 +51,7 @@ export function Routers() {
 
           <Route element={<CompanyGeralRoute />} path="client">
             <Route element={<Home />} path="dashboard" />
+            <Route element={<Home />} path="users" />
             <Route element={<UniqueEquipamentPage />} path="equipament/:equipament_id" />
           </Route>
         </Route>

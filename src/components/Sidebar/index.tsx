@@ -26,21 +26,7 @@ export function SideBar() {
               <ul>
                 {isUserAdmin && (
                   <>
-                    <Link to="/admin/dashboard" title="Dashboard">
-                      <BsHouseDoor />
-                    </Link>
                     <Link to="/admin/dashboard" title="Lista de usuários">
-                      <FiUsers />
-                    </Link>
-                  </>
-                )}
-
-                {isUserCompanyAdmin && (
-                  <>
-                    <Link to="/admin/dashboard" title="Dashboard">
-                      <BsHouseDoor />
-                    </Link>
-                    <Link to="/admin/dashboard" title="Lista de usuários da empresa">
                       <FiUsers />
                     </Link>
                   </>
@@ -51,8 +37,13 @@ export function SideBar() {
                     <Link to="/client/dashboard" title="Dashboard">
                       <BsHouseDoor />
                     </Link>
+                    <Link to="/client/users" title="Lista de usuários da empresa">
+                      <FiUsers />
+                    </Link>
                   </>
                 )}
+
+                {isUserCompanyAdmin && <></>}
               </ul>
               <ul>
                 <Link to="/profile" title="Meu Perfil">
@@ -71,24 +62,9 @@ export function SideBar() {
                 <ul>
                   {isUserAdmin && (
                     <>
-                      <Link to="/admin/dashboard" title="Dashboard">
-                        <BsHouseDoor />
-                        Dashboard
-                      </Link>
                       <Link to="/admin/dashboard" title="Lista de usuários">
                         <FiUsers />
-                        Usuários da empresa
-                      </Link>
-                    </>
-                  )}
-
-                  {isUserCompanyAdmin && (
-                    <>
-                      <Link to="/admin/dashboard" title="Dashboard">
-                        <BsHouseDoor />
-                      </Link>
-                      <Link to="/admin/dashboard" title="Lista de usuários da empresa">
-                        <FiUsers />
+                        Usuários
                       </Link>
                     </>
                   )}
@@ -99,8 +75,14 @@ export function SideBar() {
                         <BsHouseDoor />
                         Dashboard
                       </Link>
+                      <Link to="/client/users" title="Lista de usuários da empresa">
+                        <FiUsers />
+                        Usuários da empresa
+                      </Link>
                     </>
                   )}
+
+                  {isUserCompanyAdmin && <></>}
                 </ul>
                 <ul>
                   <Link to="/profile" title="Meu Perfil">

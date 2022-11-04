@@ -18,7 +18,8 @@ export interface RegisterUserData {
   password: string;
   password_confirmation: string;
   company?: {
-    name: string;
+    name?: string;
+    id?: string;
   };
 }
 

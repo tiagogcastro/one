@@ -5,6 +5,7 @@ import * as Yup from 'yup';
 
 import { nouApiStorageKey, UserData } from '../../services';
 import { nouApi } from '../../services/clientApi';
+import { apiError } from '../../utils/formatApiError';
 import {
   RegisterUserData,
   RegisterUserResponseData,
@@ -118,11 +119,14 @@ export function AuthProvider({ children }: AuthProviderProps) {
           toast.error(message);
         });
       } else {
-        const axiosErrorMessage = error.response.data.error;
-        toast.error(axiosErrorMessage, {
-          style: {
-            background: '#222222',
-          },
+        const errors = apiError(error);
+
+        errors.messages.map((message) => {
+          toast.error(message, {
+            style: {
+              background: '#222222',
+            },
+          });
         });
       }
     }
@@ -134,7 +138,11 @@ export function AuthProvider({ children }: AuthProviderProps) {
     try {
       const response = await nouApi.post('/users/register', credentials);
 
-      toast.success('Sucesso! Conta criada');
+      toast.success('Sucesso! Conta criada', {
+        style: {
+          background: '#222222',
+        },
+      });
 
       return response.data;
     } catch (error: any) {
@@ -143,8 +151,15 @@ export function AuthProvider({ children }: AuthProviderProps) {
           toast.error(message);
         });
       } else {
-        const axiosErrorMessage = error.response.data.error;
-        toast.error(axiosErrorMessage);
+        const errors = apiError(error);
+
+        errors.messages.map((message) => {
+          toast.error(message, {
+            style: {
+              background: '#222222',
+            },
+          });
+        });
       }
     }
   }

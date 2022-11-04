@@ -3,16 +3,17 @@ import { TextFieldProps } from 'material-ui';
 import React, { forwardRef } from 'react';
 import { FieldError } from 'react-hook-form';
 
-export interface InputProps {
+export interface InputProps extends TextFieldProps {
   name: string;
   type?: React.HTMLInputTypeAttribute;
   error?: FieldError;
   labelText?: string;
   defaultValue?: any;
+  value?: any;
 }
 
-const InputBase: React.ForwardRefRenderFunction<TextFieldProps, InputProps> = (
-  { name, type, error = null, defaultValue, labelText, ...rest },
+const InputBase: React.ForwardRefRenderFunction<any, any> = (
+  { name, type, error = null, labelText, ...rest },
   ref,
 ) => {
   return (
@@ -23,7 +24,6 @@ const InputBase: React.ForwardRefRenderFunction<TextFieldProps, InputProps> = (
         type={type}
         label={labelText}
         fullWidth
-        defaultValue={defaultValue}
         {...(rest as any)}
       />
       {!!error && <Typography color="red">{error.message}</Typography>}

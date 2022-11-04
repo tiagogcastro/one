@@ -19,6 +19,7 @@ import { UniqueTableRow } from './UniqueTableRow';
 import ViewUserDataModal from './components/ViewUserDataModal';
 import { UserListProvider } from '../../../context/users/UserListContext';
 import { useUsersList } from '../../../hooks/useUsersList';
+import { Link } from 'react-router-dom';
 
 export function AdminDashboardPage() {
   const { user, signOut } = useAuth();
@@ -70,17 +71,40 @@ export function AdminDashboardPage() {
           position="relative"
           pb={16}
         >
-          <Box>
-            <Typography
-              component="h1"
-              fontSize="1.6rem"
-              maxWidth="1280px"
-              mx="auto"
-              py={4}
-              px={2}
-            >
+          <Box
+            display="flex"
+            alignItems="center"
+            justifyContent="flex-start"
+            gap={4}
+            py={4}
+            px={2}
+            maxWidth="1280px"
+            mx="auto"
+          >
+            <Typography component="h1" fontSize="1.6rem">
               Listagem de usuários
             </Typography>
+            <Link
+              to="/admin/users/register"
+              style={{
+                maxWidth: 'max-content',
+                height: '100%',
+                width: '100%',
+                padding: '12px 16px',
+                borderRadius: '8px',
+
+                background: '#FEC84B',
+                color: '#000',
+
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+
+                transition: 'background 0.3s',
+              }}
+            >
+              Criar nova conta
+            </Link>
           </Box>
           <Box
             height="100%"
@@ -133,7 +157,6 @@ export function AdminDashboardPage() {
               columns={columns}
               pageSize={10}
               onRowClick={handleRowClick}
-              // checkboxSelection
             />
           </Box>
         </Box>
