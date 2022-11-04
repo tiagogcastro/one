@@ -9,6 +9,7 @@ import { SignUpUserPage } from '../pages/Auth/SignUpUser';
 import Home from '../pages/UserPages/Dashboard';
 import { ProfilePage } from '../pages/UserPages/Profile';
 import { UniqueEquipamentPage } from '../pages/UserPages/UniqueEquipamentPage';
+import { UsersFromCompanyPage } from '../pages/UserPages/UsersFromCompany';
 import { notFoundRedirectPath } from '../utils/notFoundRedirectPath';
 import { AdminRoute } from './AdminRoute';
 import { CompanyAdminRoute } from './company/AdminRouter';
@@ -51,7 +52,15 @@ export function Routers() {
 
           <Route element={<CompanyGeralRoute />} path="client">
             <Route element={<Home />} path="dashboard" />
-            <Route element={<Home />} path="users" />
+
+            <Route
+              element={
+                <UserListProvider>
+                  <UsersFromCompanyPage />
+                </UserListProvider>
+              }
+              path="users"
+            />
             <Route element={<UniqueEquipamentPage />} path="equipament/:equipament_id" />
           </Route>
         </Route>
