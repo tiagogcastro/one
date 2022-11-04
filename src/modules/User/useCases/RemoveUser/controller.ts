@@ -7,7 +7,7 @@ export class RemoveUserController {
   public async handle({ request, response }: HttpContextContract) {
     const userLoggedId = request.user.id;
 
-    const userIdToDelete = request.headers().user_id as string;
+    const userIdToDelete = request.qs().user_id as string;
 
     try {
       const userToDelete = await findById(userIdToDelete);

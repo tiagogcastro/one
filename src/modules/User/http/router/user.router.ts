@@ -4,6 +4,7 @@ import { AuthUserController } from '../../useCases/AuthUser/controller';
 import { CreateUserController } from '../../useCases/CreateUser/controller';
 import { EmailVerificationListingController } from '../../useCases/EmailVerification/controller';
 import { RemoveUserController } from '../../useCases/RemoveUser/controller';
+import { RemoveUserRoleController } from '../../useCases/RemoveUserRole/controller';
 import { UpdateUserController } from '../../useCases/UpdateUser/controller';
 import { UserListingController } from '../../useCases/UserListing/controller';
 
@@ -22,6 +23,10 @@ Route.group(() => {
   Route.group(() => {
     Route.post('view-as-client', new AdminAuthViewAsClientController().handle).as('view-as-client').middleware('auth');
   }).prefix('/admin/')
+
+  Route.group(() => {
+    Route.delete('remove', new RemoveUserRoleController().handle).as('remove-user-role').middleware('auth');
+  }).prefix('/roles/')
 
   Route.get('/verify-email/:email', new EmailVerificationListingController().handle).as('verifyEmail');
 }).prefix('api/users/');

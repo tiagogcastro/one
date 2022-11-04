@@ -1,6 +1,7 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext';
 import { compare, hash } from 'bcrypt';
 import { findByRole } from 'src/modules/Roles/repositories/role-repositories';
+import { userInstanceToInstance } from 'src/shared/utils/instanceToInstance';
 import { findByEmail, findById, findByUsername, updateUser } from '../../repositories/user-repositories';
 import { findUserRoleByRoleIdAndUserId } from '../../repositories/user-role-repositories';
 
@@ -27,6 +28,10 @@ export class UpdateUserController {
         throw new Error('Admin role not found');
       }
 
+      if(!userToEditId) {
+        throw new Error('Please, enter user_id');
+      }
+
       let userToEdit = await findById(userToEditId);
 
       if(!userToEdit) {
@@ -39,40 +44,55 @@ export class UpdateUserController {
         throw new Error('Cannot update user');
       }
 
-      const foundUserByUsername = await findByUsername(newUser.username || userToEdit.username);
-      const foundUserByEmail = await findByEmail(newUser.email || userToEdit.email);
-      const foundUserLogged = await findById(userLoggedId);
-
-      if (
-        foundUserByUsername
-        && userToEdit.username !== newUser.username 
-        && foundUserByUsername.username === newUser.username
-      ) {
-        throw new Error("Cannot use another user's username");
-      }
-
-      if (
-        foundUserByEmail
-        && userToEdit.email !== newUser.email 
-        && foundUserByEmail.email === newUser.email
-      ) {
-        throw new Error("Cannot use another user's email");
-      }
-
       if(userLoggedId !== userToEdit.id && !adminUserRole) {
         throw new Error("Você não tem permissão para editar este usuário");
       }
 
-      const newPasswordIsEqual = await compare(newUser.oldPassword, userToEdit.password);
+      if (username) {
+        const checkUsernameAlreadyExists = await findByUsername(username);
+  
+        if (checkUsernameAlreadyExists && userToEdit.username !== username) {
+          throw new Error('Username already exists');
+        }
 
-      if(!newPasswordIsEqual) {
-        throw new Error("Senha antiga informada é diferente da senha salva");
+        userToEdit.username = username;
       }
 
-      const hashNewPassword = await hash(newUser.newPassword, 10);
+      if (email) {
+        const checkEmailAlreadyExists = await findByEmail(email);
+  
+        if (checkEmailAlreadyExists && userToEdit.email !== email) {
+          throw new Error('Username already exists');
+        }
+        
+        userToEdit.email = email;
+      }
 
-      if(!hashNewPassword) {
-        throw new Error("Não foi possível hashear a senha");
+      if(newPassword && !oldPassword) {
+        throw new Error("Coloque a senha antiga");
+      }
+
+      if(!newPassword && oldPassword) {
+        throw new Error("Coloque a nova senha");
+      }
+
+      if(newPassword && oldPassword) {
+        const newPasswordIsEqual = await compare(newUser.oldPassword, userToEdit.password);
+
+        if(!newPasswordIsEqual) {
+          throw new Error("Senha antiga informada é diferente da senha salva");
+        }
+
+        const hashNewPassword = await hash(newUser.newPassword, 10);
+
+        if(!hashNewPassword) {
+          throw new Error("Não foi possível hashear a senha");
+        }
+
+        userToEdit = {
+          ...userToEdit,
+          password: hashNewPassword,
+        }
       }
 
       userToEdit = {
@@ -81,7 +101,6 @@ export class UpdateUserController {
         lastname: newUser.lastname || userToEdit.lastname,
         email: newUser.email || userToEdit.email,
         username: newUser.username || userToEdit.username,
-        password: hashNewPassword,
       }
 
       const userUpdated = await updateUser(userToEdit.id, userToEdit)
@@ -89,9 +108,7 @@ export class UpdateUserController {
       return response
         .status(200)
         .send({
-          success: 'User updated successfully',
-          user: userUpdated,
-          userLogged: foundUserLogged,
+          ...userInstanceToInstance(userUpdated),
         })
       
     } catch(error) {

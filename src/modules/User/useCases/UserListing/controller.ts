@@ -8,21 +8,24 @@ export class UserListingController {
   public async index() {
     const users = await prisma.user.findMany({
       include: {
-        Company: true,
-        UserCompany: true,
-        UserPermission: {
-          select: {
-            id: true,
-            permission: true,
+        Company: {
+          include: {
+            UserPermission: {
+              select: {
+                id: true,
+                permission: true
+              }
+            }
           }
         },
+        UserCompany: true,
         UserRole: {
           select: {
             id: true,
-            role: true
+            role: true,
           }
         },
-      }
+      },
     })
     return userInstanceToInstance(users)
   }

@@ -36,6 +36,25 @@ export async function updateUser(id: string, data: User): Promise<User> {
     where: {
       id,
     },
+    include: {
+      Company: {
+        include: {
+          UserPermission: {
+            select: {
+              id: true,
+              permission: true
+            }
+          }
+        }
+      },
+      UserCompany: true,
+      UserRole: {
+        select: {
+          id: true,
+          role: true,
+        }
+      },
+    },
     data
   });
 
@@ -48,21 +67,24 @@ export async function findAllUserInfoByEmail(email: string): Promise<User | null
       email
     },
     include: {
-      Company: true,
-      UserCompany: true,
-      UserPermission: {
-        select: {
-          id: true,
-          permission: true,
+      Company: {
+        include: {
+          UserPermission: {
+            select: {
+              id: true,
+              permission: true
+            }
+          }
         }
       },
+      UserCompany: true,
       UserRole: {
         select: {
           id: true,
-          role: true
+          role: true,
         }
       },
-    }
+    },
   });
 
   return user;
@@ -74,24 +96,24 @@ export async function findAllUserInfoById(id: string): Promise<User | null> {
       id
     },
     include: {
-      UserCompany: {
+      Company: {
         include: {
-          company: true
+          UserPermission: {
+            select: {
+              id: true,
+              permission: true
+            }
+          }
         }
       },
-      UserPermission: {
-        select: {
-          id: true,
-          permission: true,
-        }
-      },
+      UserCompany: true,
       UserRole: {
         select: {
           id: true,
-          role: true
+          role: true,
         }
       },
-    }
+    },
   });
 
   return user;
