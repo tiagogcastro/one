@@ -4,7 +4,11 @@ import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import { Input } from '../../../../components/Forms/Input';
 import { AiOutlineClose } from 'react-icons/ai';
-import { useUsersList } from '../../../../hooks/useUsersList';
+import { useUsersFromCompanyList } from '../../../../hooks/useUsersFromCompanyList';
+import { useAuth } from '../../../../hooks/useAuth';
+import { toast } from 'react-toastify';
+import { apiError } from '../../../../utils/formatApiError';
+import { nouApi } from '../../../../services';
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -26,7 +30,92 @@ export default function ViewUserDataModal({
   handleClose,
   isOpen,
 }: ViewUserDataModalProps) {
-  const { currentUserData: user } = useUsersList();
+  const { isUserCompanyAdmin } = useAuth();
+  const { currentUserData: user, setUsers } = useUsersFromCompanyList();
+
+  async function handleRemovePermission(permission_name: string) {
+    try {
+      await nouApi.delete('/user-permission/remove', {
+        params: {
+          company_id: '15a434f5-386a-4400-be43-50018ba0f19e',
+          user_id: user?.id,
+          permission: permission_name,
+        },
+      });
+
+      setUsers((prevState) => {
+        const foundUser = prevState.map((prevUser) => {
+          if (prevUser.id === user?.id) {
+            return {
+              ...prevUser,
+              UserPermission: prevUser.UserPermission.filter((prevPermission) => {
+                return prevPermission.permission.permission !== permission_name;
+              }),
+            };
+          }
+
+          return prevUser;
+        });
+
+        if (foundUser) {
+          return [...foundUser];
+        }
+
+        return [...prevState];
+      });
+
+      handleClose();
+
+      toast.success('Sucesso! Permissão do usuário na empresa removida', {
+        style: {
+          background: '#222222',
+        },
+      });
+    } catch (error: any) {
+      const errors = apiError(error);
+
+      errors.messages.map((message) => {
+        toast.error(message, {
+          style: {
+            background: '#222222',
+          },
+        });
+      });
+    }
+  }
+
+  async function handleRemoveUserCompany(user_id: string) {
+    try {
+      await nouApi.delete('/user-company/remove', {
+        params: {
+          company_id: '15a434f5-386a-4400-be43-50018ba0f19e',
+          user_id,
+        },
+      });
+
+      setUsers((prevState) => {
+        return prevState.filter((where) => where.id !== user_id);
+      });
+
+      handleClose();
+
+      toast.success('Sucesso! Usuário removido da empresa', {
+        style: {
+          background: '#222222',
+        },
+      });
+    } catch (error: any) {
+      const errors = apiError(error);
+
+      errors.messages.map((message) => {
+        toast.error(message, {
+          style: {
+            background: '#222222',
+          },
+        });
+      });
+    }
+  }
 
   if (!user) {
     return (
@@ -56,6 +145,16 @@ export default function ViewUserDataModal({
             <Typography id="modal-modal-title" variant="h4" component="h2">
               Informações do usuário
             </Typography>
+            {isUserCompanyAdmin && (
+              <Button
+                color="error"
+                variant="contained"
+                size="small"
+                onClick={() => handleRemoveUserCompany(user.id)}
+              >
+                Remover da empresa
+              </Button>
+            )}
             <Box position="absolute" top="0" right="0">
               <Button sx={{ p: 1, display: 'block' }} onClick={handleClose}>
                 <AiOutlineClose />
@@ -115,7 +214,7 @@ export default function ViewUserDataModal({
                 component="h2"
                 marginTop={2}
               >
-                Empresas
+                Permissões na empresa
               </Typography>
               <Box
                 display="flex"
@@ -124,16 +223,25 @@ export default function ViewUserDataModal({
                 borderTop="1px solid #4f4f50"
                 paddingTop={1}
               >
-                {user.Company &&
-                  user.Company.map((company) => (
+                {user.UserPermission &&
+                  user.UserPermission.map(({ permission }) => (
                     <Box
                       display="flex"
                       alignItems="flex-start"
                       flexDirection="column"
                       gap={1}
-                      key={company.id}
+                      key={permission.id}
                     >
-                      <Typography>{company.name}</Typography>
+                      <Typography>{permission.permission}</Typography>
+                      {isUserCompanyAdmin && (
+                        <Button
+                          variant="contained"
+                          size="small"
+                          onClick={() => handleRemovePermission(permission.permission)}
+                        >
+                          Remover
+                        </Button>
+                      )}
                     </Box>
                   ))}
               </Box>

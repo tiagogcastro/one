@@ -4,15 +4,14 @@ import { useEffect, useState } from 'react';
 
 import Header from '../../../components/Layouts/Header/Header';
 import { SideBar } from '../../../components/Sidebar';
-import { useAuth } from '../../../hooks/useAuth';
-import { nouApi, UserData } from '../../../services';
+import { nouApi, UserFromCompanyData } from '../../../services';
 
 import ViewUserDataModal from './components/ViewUserDataModal';
-import { useUsersList } from '../../../hooks/useUsersList';
+import { useUsersFromCompanyList } from '../../../hooks/useUsersFromCompanyList';
 import { Link } from 'react-router-dom';
 
 export function UsersFromCompanyPage() {
-  const { setUsers, setCurrentUserData, currentUserData, users } = useUsersList();
+  const { setUsers, setCurrentUserData, users } = useUsersFromCompanyList();
 
   const columns: GridColDef[] = [
     { field: 'email', headerName: 'E-mail', width: 220 },
@@ -20,11 +19,16 @@ export function UsersFromCompanyPage() {
     { field: 'lastname', headerName: 'Último nome', width: 160 },
     { field: 'username', headerName: 'Username', width: 160 },
   ];
+
   const [isOpen, setIsOpen] = useState(false);
 
   async function getUsers() {
     try {
-      const response = await nouApi.get<UserData[]>('/users/list');
+      const response = await nouApi.get<UserFromCompanyData[]>('/user-company/list', {
+        params: {
+          company_id: '15a434f5-386a-4400-be43-50018ba0f19e',
+        },
+      });
 
       setUsers(response.data);
     } catch (error) {
@@ -36,8 +40,9 @@ export function UsersFromCompanyPage() {
     getUsers();
   }, []);
 
-  async function handleRowClick(e: GridRowParams<UserData>) {
+  async function handleRowClick(e: GridRowParams<UserFromCompanyData>) {
     setIsOpen(true);
+    console.log(e);
     setCurrentUserData(e.row);
   }
 
@@ -71,7 +76,7 @@ export function UsersFromCompanyPage() {
             mx="auto"
           >
             <Typography component="h1" fontSize="1.6rem">
-              Listagem de usuários
+              Listagem de usuários da empresa
             </Typography>
             <Link
               to="/client/admin/users/register"
@@ -114,15 +119,7 @@ export function UsersFromCompanyPage() {
         </Box>
       </Box>
 
-      {isOpen && (
-        <ViewUserDataModal
-          setUsers={setUsers}
-          setCurrentUserData={setCurrentUserData}
-          handleClose={handleCloseModal}
-          isOpen={isOpen}
-          user={currentUserData}
-        />
-      )}
+      {isOpen && <ViewUserDataModal handleClose={handleCloseModal} isOpen={isOpen} />}
     </Box>
   );
 }

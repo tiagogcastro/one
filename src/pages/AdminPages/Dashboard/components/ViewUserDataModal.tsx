@@ -128,14 +128,7 @@ export default function ViewUserDataModal({
         return [...prevState];
       });
 
-      setCurrentUserData((prevState) => {
-        return {
-          ...prevState,
-          UserRole: prevState.UserRole.filter((prevRole) => {
-            return prevRole.id !== role_id;
-          }),
-        };
-      });
+      handleClose();
 
       toast.info('Info! Cargo do usuário foi deletado', {
         style: {

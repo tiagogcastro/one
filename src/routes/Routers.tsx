@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { UserListProvider } from '../context/users/UserListContext';
+import { UsersFromCompanyListProvider } from '../context/users/UsersFromCompanyListContext';
 
 import { useAuth } from '../hooks/useAuth';
 import { AdminDashboardPage } from '../pages/AdminPages/Dashboard';
@@ -55,9 +56,9 @@ export function Routers() {
 
             <Route
               element={
-                <UserListProvider>
+                <UsersFromCompanyListProvider>
                   <UsersFromCompanyPage />
-                </UserListProvider>
+                </UsersFromCompanyListProvider>
               }
               path="users"
             />
