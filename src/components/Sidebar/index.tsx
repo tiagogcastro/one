@@ -8,6 +8,7 @@ import { useAuth } from '../../hooks/useAuth';
 import { useCompany } from '../../hooks/useCompany';
 
 import * as Styles from './styles';
+import { currentCompanyIdStorageKey } from '../../context';
 
 export function SideBar() {
   const { isUserAdmin, isUserCompanyAdmin, signOut, user } = useAuth();
@@ -22,6 +23,7 @@ export function SideBar() {
   function handleSignOut() {
     setCompanies([]);
     setCurrentCompanyId(null);
+    localStorage.removeItem(currentCompanyIdStorageKey);
 
     signOut();
   }
