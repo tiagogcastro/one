@@ -25,10 +25,11 @@ import * as Yup from 'yup';
 
 import { Input } from '../../../components/Forms/Input';
 import { InputPassword } from '../../../components/Forms/InputPassword';
-import Header from '../../../components/Layouts/Header/Header';
+import { Header } from '../../../components/Layouts/Header/Header';
 import { SideBar } from '../../../components/Sidebar';
 import { RegisterUserData } from '../../../context';
 import { useAuth } from '../../../hooks/useAuth';
+import { useCompany } from '../../../hooks/useCompany';
 import { Company, nouApi } from '../../../services';
 
 const signUpFormSchema = Yup.object().shape({
@@ -54,6 +55,7 @@ const signUpFormSchema = Yup.object().shape({
 export function SignUpUserPage() {
   const navigateTo = useNavigate();
   const { register: registerUser, isUserAdmin, isUserCompanyAdmin, user } = useAuth();
+  const { currentCompany } = useCompany();
 
   const [companies, setCompanies] = useState<Company[]>([]);
   const [currentCompanyId, setCurrentCompanyId] = useState('');
@@ -82,13 +84,9 @@ export function SignUpUserPage() {
   };
 
   async function getCompanies() {
-    try {
-      const response = await nouApi.get('/company/list');
+    const response = await nouApi.get('/company/list');
 
-      setCompanies(response.data.companies);
-    } catch (error) {
-      console.log(error);
-    }
+    setCompanies(response.data.companies);
   }
 
   async function handleChangeCompanyId(event: SelectChangeEvent) {
@@ -98,6 +96,8 @@ export function SignUpUserPage() {
   async function handleChangeRadioValue(event: SelectChangeEvent) {
     setRadioValue(event.target.value as string);
   }
+
+  console.log(currentCompany);
 
   useEffect(() => {
     getCompanies();
@@ -227,11 +227,11 @@ export function SignUpUserPage() {
                         )}
                       </Box>
                     )}
-                    {isUserCompanyAdmin && (
+                    {isUserCompanyAdmin && currentCompany && (
                       <Input
                         labelText="Adicionar na empresa"
                         {...register('company.id')}
-                        defaultValue={user?.Company && user?.Company[0].name}
+                        defaultValue={currentCompany?.company.name}
                         disabled
                       />
                     )}

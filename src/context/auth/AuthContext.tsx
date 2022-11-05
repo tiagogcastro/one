@@ -1,5 +1,4 @@
-import { AxiosError } from 'axios';
-import { createContext, ReactNode, useEffect, useLayoutEffect, useState } from 'react';
+import { createContext, ReactNode, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import * as Yup from 'yup';
 
@@ -21,12 +20,12 @@ type AuthContextData = {
 
   isUserAdmin: boolean;
   isUserCompanyAdmin: boolean;
-  itsPartOfTheCompany: boolean;
 
   signIn(credentials: SignInData): Promise<SignInResponseData | undefined>;
   register(credentials: RegisterUserData): Promise<RegisterUserResponseData | undefined>;
   signOut(): void;
   setUser(fn: UserData | null | ((user: UserData | null) => UserData | null)): void;
+  setLoading(fn: boolean | ((fn: boolean) => boolean)): void;
 };
 
 type AuthProviderProps = {
@@ -44,14 +43,9 @@ export function getUserValidations(user: UserData | null) {
     return where.role.role === 'admin';
   });
 
-  const itsPartOfTheCompany = !!user?.UserCompany.find(
-    (where) => where.userId === user.id,
-  );
-
   return {
     isUserCompanyAdmin,
     isUserAdmin,
-    itsPartOfTheCompany,
   };
 }
 
@@ -64,8 +58,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   const [loading, setLoading] = useState(true);
 
-  const { isUserAdmin, isUserCompanyAdmin, itsPartOfTheCompany } =
-    getUserValidations(user);
+  const { isUserAdmin, isUserCompanyAdmin } = getUserValidations(user);
 
   async function getUser() {
     try {
@@ -73,15 +66,14 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
       const userData = response.data;
 
-      setIsLogged(true);
       setUser(userData || null);
       setLoading(false);
+      setIsLogged(true);
 
       return userData;
     } catch (error: any) {
       setLoading(false);
-
-      return error;
+      signOut();
     }
   }
 
@@ -181,6 +173,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         register,
         signOut,
         setUser,
+        setLoading,
         user,
         token,
         loading,
@@ -188,7 +181,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
         isUserAdmin,
         isUserCompanyAdmin,
-        itsPartOfTheCompany,
       }}
     >
       {children}

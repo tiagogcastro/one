@@ -1,10 +1,11 @@
 import { Box } from '@mui/material';
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { useAuth } from '../../hooks/useAuth';
+import { Link, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 import { Company, Equipament as EquipamentInterface } from '../../services';
 import { nouApi } from '../../services/clientApi';
+import { apiError } from '../../utils/formatApiError';
 import { Equipament } from '../Equipament';
 
 export interface EquipamentsResponse {
@@ -12,8 +13,12 @@ export interface EquipamentsResponse {
   company: Company;
 }
 
-export function EquipamentsContainer() {
-  const { user } = useAuth();
+export interface EquipamentsContainerProps {
+  company_id: string | undefined;
+}
+
+export function EquipamentsContainer({ company_id }: EquipamentsContainerProps) {
+  const navigate = useNavigate();
 
   const [equipaments, setEquipaments] = useState<EquipamentsResponse | null>(null);
 
@@ -21,19 +26,39 @@ export function EquipamentsContainer() {
     try {
       const response = await nouApi.get<EquipamentsResponse | null>('/equipament/list', {
         params: {
-          company_id: user?.UserCompany[0].companyId,
+          company_id,
         },
       });
 
       setEquipaments(response.data);
     } catch (error) {
-      console.log(error);
+      const errors = apiError(error);
+
+      errors.messages.map((message) => {
+        toast.error(message, {
+          style: {
+            background: '#222222',
+          },
+        });
+      });
+
+      toast.info('Redirecionado para página de perfil', {
+        style: {
+          background: '#222222',
+        },
+      });
+
+      navigate('/profile');
     }
   }
 
   useEffect(() => {
     getEquipaments();
   }, []);
+
+  if (!equipaments) {
+    return <>Loading...</>;
+  }
 
   return (
     <Box

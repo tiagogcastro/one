@@ -1,7 +1,7 @@
 import { Grid } from '@mui/material';
 import React from 'react';
 
-import Header from '../Header/Header';
+import { Header } from '../Header/Header';
 import Navbar from '../Navbar/Navbar';
 import { Container } from './styles';
 

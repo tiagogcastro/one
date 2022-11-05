@@ -7,10 +7,9 @@ import { toast } from 'react-toastify';
 
 import { Equipament } from '../../../components/Equipament';
 import { Input } from '../../../components/Forms/Input';
-import Header from '../../../components/Layouts/Header/Header';
+import { Header } from '../../../components/Layouts/Header/Header';
 import { SideBar } from '../../../components/Sidebar';
 import { a11yProps, TabPanel } from '../../../components/Tabs/TabPanel';
-import { useAuth } from '../../../hooks/useAuth';
 import { Company, Equipament as EquipamentInterface, nouApi } from '../../../services';
 import { apiError } from '../../../utils/formatApiError';
 
@@ -20,12 +19,9 @@ export interface EquipamentResponse {
 }
 
 export function UniqueEquipamentPage() {
-  const { user } = useAuth();
-
   const [data, setEquipament] = useState<EquipamentResponse | null>(null);
 
-  const params = useParams();
-  const equipamentId = params.equipament_id;
+  const { equipament_id, company_id } = useParams();
 
   const navigate = useNavigate();
 
@@ -41,8 +37,8 @@ export function UniqueEquipamentPage() {
         '/equipament/list-unique',
         {
           params: {
-            equipament_id: equipamentId,
-            company_id: user?.UserCompany[0].id,
+            equipament_id,
+            company_id,
           },
         },
       );
@@ -58,7 +54,8 @@ export function UniqueEquipamentPage() {
           },
         });
       });
-      navigate('/dashboard');
+
+      navigate(`/client/${company_id}/dashboard`);
     }
   }
 
@@ -72,7 +69,7 @@ export function UniqueEquipamentPage() {
     try {
       const response = await nouApi.put('/equipament/update', {
         company_id: data?.company.id,
-        equipament_id: equipamentId,
+        equipament_id,
         params: {
           ...dataInfo.params,
           temperature: Number(dataInfo.params.temperature),
@@ -106,7 +103,7 @@ export function UniqueEquipamentPage() {
     try {
       const response = await nouApi.put('/equipament/update', {
         company_id: data?.company.id,
-        equipament_id: equipamentId,
+        equipament_id,
         equipament_name: dataInfo.name,
         params: {
           ...dataInfo.params,

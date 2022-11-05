@@ -6,12 +6,16 @@ export type PrivateRouteProps = {
   redirect_to?: string;
 };
 
-export function PrivateRoute({ redirect_to = '/login' }: PrivateRouteProps) {
-  const { isLogged } = useAuth();
+export function PrivateRoute({ redirect_to = '/batata' }: PrivateRouteProps) {
+  const { loading, user } = useAuth();
 
-  if (isLogged) {
-    return <Outlet />;
+  if (loading) {
+    return <>Loading...</>;
   }
 
-  return <Navigate to={redirect_to} />;
+  if (!user) {
+    return <Navigate to={redirect_to} />;
+  }
+
+  return <Outlet />;
 }

@@ -76,3 +76,8 @@ export interface UserFromCompanyData extends User {
   UserPermission: UserPermission[];
   UserRole: UserRole[];
 }
+
+export interface CompaniesData {
+  company: Company;
+  id: string;
+}

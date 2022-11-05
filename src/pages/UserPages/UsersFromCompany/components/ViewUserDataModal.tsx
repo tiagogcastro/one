@@ -9,6 +9,7 @@ import { useAuth } from '../../../../hooks/useAuth';
 import { toast } from 'react-toastify';
 import { apiError } from '../../../../utils/formatApiError';
 import { nouApi } from '../../../../services';
+import { useParams } from 'react-router-dom';
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -32,12 +33,13 @@ export default function ViewUserDataModal({
 }: ViewUserDataModalProps) {
   const { isUserCompanyAdmin } = useAuth();
   const { currentUserData: user, setUsers } = useUsersFromCompanyList();
+  const { company_id } = useParams();
 
   async function handleRemovePermission(permission_name: string) {
     try {
       await nouApi.delete('/user-permission/remove', {
         params: {
-          company_id: '15a434f5-386a-4400-be43-50018ba0f19e',
+          company_id,
           user_id: user?.id,
           permission: permission_name,
         },
@@ -88,7 +90,7 @@ export default function ViewUserDataModal({
     try {
       await nouApi.delete('/user-company/remove', {
         params: {
-          company_id: '15a434f5-386a-4400-be43-50018ba0f19e',
+          company_id,
           user_id,
         },
       });

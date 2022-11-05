@@ -5,17 +5,32 @@ import { GoSignOut } from 'react-icons/go';
 import { FaUser } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
+import { useCompany } from '../../hooks/useCompany';
 
 import * as Styles from './styles';
 
 export function SideBar() {
-  const { isUserAdmin, isUserCompanyAdmin, signOut, itsPartOfTheCompany } = useAuth();
+  const { isUserAdmin, isUserCompanyAdmin, signOut, user } = useAuth();
+  const { setCompanies, setCurrentCompanyId, currentCompanyId } = useCompany();
 
   const [sideBar, setSideBar] = useState(false);
 
   function handleChangeSideBar() {
     setSideBar((prevState) => !prevState);
   }
+
+  function handleSignOut() {
+    setCompanies([]);
+    setCurrentCompanyId(null);
+
+    signOut();
+  }
+
+  const clientNavigateTo = `/client/${currentCompanyId}`;
+
+  const itsPartOfTheCompany = !!user?.UserCompany.find(
+    (where) => where.companyId === currentCompanyId,
+  );
 
   return (
     <Styles.Container>
@@ -34,10 +49,13 @@ export function SideBar() {
 
                 {itsPartOfTheCompany && (
                   <>
-                    <Link to="/client/dashboard" title="Dashboard">
+                    <Link to={`${clientNavigateTo}/dashboard`} title="Dashboard">
                       <BsHouseDoor />
                     </Link>
-                    <Link to="/client/users" title="Lista de usuários da empresa">
+                    <Link
+                      to={`${clientNavigateTo}/users`}
+                      title="Lista de usuários da empresa"
+                    >
                       <FiUsers />
                     </Link>
                   </>
@@ -49,7 +67,7 @@ export function SideBar() {
                 <Link to="/profile" title="Meu Perfil">
                   <FaUser />
                 </Link>
-                <button onClick={signOut}>
+                <button onClick={handleSignOut}>
                   <GoSignOut />
                 </button>
               </ul>
@@ -71,11 +89,14 @@ export function SideBar() {
 
                   {itsPartOfTheCompany && (
                     <>
-                      <Link to="/client/dashboard" title="Dashboard">
+                      <Link to={`${clientNavigateTo}/dashboard`} title="Dashboard">
                         <BsHouseDoor />
                         Dashboard
                       </Link>
-                      <Link to="/client/users" title="Lista de usuários da empresa">
+                      <Link
+                        to={`${clientNavigateTo}/users`}
+                        title="Lista de usuários da empresa"
+                      >
                         <FiUsers />
                         Usuários da empresa
                       </Link>
@@ -89,7 +110,7 @@ export function SideBar() {
                     <FaUser />
                     Meu Perfil
                   </Link>
-                  <button onClick={signOut}>
+                  <button onClick={handleSignOut}>
                     <GoSignOut /> Sair da conta
                   </button>
                 </ul>

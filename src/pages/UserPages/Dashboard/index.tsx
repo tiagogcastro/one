@@ -1,11 +1,13 @@
 import { Box } from '@mui/material';
-import React from 'react';
+import { useParams } from 'react-router-dom';
 
 import { EquipamentsContainer } from '../../../components/EquipamentsContainer';
-import Header from '../../../components/Layouts/Header/Header';
+import { Header } from '../../../components/Layouts/Header/Header';
 import { SideBar } from '../../../components/Sidebar';
 
-const Home: React.FC = () => {
+export function ClientDashboardPage() {
+  const { company_id } = useParams();
+
   return (
     <Box>
       <Header />
@@ -19,10 +21,9 @@ const Home: React.FC = () => {
           height="calc(100vh - 80px)"
           position="relative"
         >
-          <EquipamentsContainer />
+          <EquipamentsContainer company_id={company_id} />
         </Box>
       </Box>
     </Box>
   );
-};
-export default Home;
+}

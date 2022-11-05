@@ -1,17 +1,26 @@
-import { Box, Typography } from '@mui/material';
+import { Box, Typography, useColorScheme } from '@mui/material';
 import { DataGrid, GridColDef, GridRowParams } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
 
-import Header from '../../../components/Layouts/Header/Header';
+import { Header } from '../../../components/Layouts/Header/Header';
 import { SideBar } from '../../../components/Sidebar';
 import { nouApi, UserFromCompanyData } from '../../../services';
 
 import ViewUserDataModal from './components/ViewUserDataModal';
 import { useUsersFromCompanyList } from '../../../hooks/useUsersFromCompanyList';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { apiError } from '../../../utils/formatApiError';
+import { useCompany } from '../../../hooks/useCompany';
+import { useAuth } from '../../../hooks/useAuth';
 
 export function UsersFromCompanyPage() {
+  const navigate = useNavigate();
+
+  const { company_id } = useParams();
+  const { currentCompanyId } = useCompany();
   const { setUsers, setCurrentUserData, users } = useUsersFromCompanyList();
+  const { isUserCompanyAdmin } = useAuth();
 
   const columns: GridColDef[] = [
     { field: 'email', headerName: 'E-mail', width: 220 },
@@ -26,13 +35,29 @@ export function UsersFromCompanyPage() {
     try {
       const response = await nouApi.get<UserFromCompanyData[]>('/user-company/list', {
         params: {
-          company_id: '15a434f5-386a-4400-be43-50018ba0f19e',
+          company_id,
         },
       });
 
       setUsers(response.data);
     } catch (error) {
-      console.log(error);
+      const errors = apiError(error);
+
+      errors.messages.map((message) => {
+        toast.error(message, {
+          style: {
+            background: '#222222',
+          },
+        });
+      });
+
+      toast.info('Redirecionado para página de perfil', {
+        style: {
+          background: '#222222',
+        },
+      });
+
+      navigate(`/profile`);
     }
   }
 
@@ -42,13 +67,24 @@ export function UsersFromCompanyPage() {
 
   async function handleRowClick(e: GridRowParams<UserFromCompanyData>) {
     setIsOpen(true);
-    console.log(e);
     setCurrentUserData(e.row);
   }
 
   async function handleCloseModal() {
     setIsOpen(false);
     setCurrentUserData(null);
+  }
+
+  if (!users) {
+    return (
+      <Box>
+        <Header />
+        <Box>
+          <SideBar />
+          <Box>Loading...</Box>
+        </Box>
+      </Box>
+    );
   }
 
   return (
@@ -78,27 +114,29 @@ export function UsersFromCompanyPage() {
             <Typography component="h1" fontSize="1.6rem">
               Listagem de usuários da empresa
             </Typography>
-            <Link
-              to="/client/admin/users/register"
-              style={{
-                maxWidth: 'max-content',
-                height: '100%',
-                width: '100%',
-                padding: '12px 16px',
-                borderRadius: '8px',
+            {isUserCompanyAdmin && (
+              <Link
+                to={`/client/${currentCompanyId}/admin/users/register`}
+                style={{
+                  maxWidth: 'max-content',
+                  height: '100%',
+                  width: '100%',
+                  padding: '12px 16px',
+                  borderRadius: '8px',
 
-                background: '#FEC84B',
-                color: '#000',
+                  background: '#FEC84B',
+                  color: '#000',
 
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
 
-                transition: 'background 0.3s',
-              }}
-            >
-              Criar nova conta
-            </Link>
+                  transition: 'background 0.3s',
+                }}
+              >
+                Criar nova conta
+              </Link>
+            )}
           </Box>
           <Box
             height="100%"

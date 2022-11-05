@@ -3,7 +3,7 @@ import { DataGrid, GridColDef, GridRowParams } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
 import { IoArrowDown, IoArrowUp } from 'react-icons/io5';
 
-import Header from '../../../components/Layouts/Header/Header';
+import { Header } from '../../../components/Layouts/Header/Header';
 import { SideBar } from '../../../components/Sidebar';
 import { useAuth } from '../../../hooks/useAuth';
 import { nouApi, UserData } from '../../../services';

@@ -4,10 +4,11 @@ import { UserListProvider } from '../context/users/UserListContext';
 import { UsersFromCompanyListProvider } from '../context/users/UsersFromCompanyListContext';
 
 import { useAuth } from '../hooks/useAuth';
+import { useCompany } from '../hooks/useCompany';
 import { AdminDashboardPage } from '../pages/AdminPages/Dashboard';
 import { SignInUserPage } from '../pages/Auth/SignInUser';
 import { SignUpUserPage } from '../pages/Auth/SignUpUser';
-import Home from '../pages/UserPages/Dashboard';
+import { ClientDashboardPage } from '../pages/UserPages/Dashboard';
 import { ProfilePage } from '../pages/UserPages/Profile';
 import { UniqueEquipamentPage } from '../pages/UserPages/UniqueEquipamentPage';
 import { UsersFromCompanyPage } from '../pages/UserPages/UsersFromCompany';
@@ -20,8 +21,13 @@ import { PublicRoute } from './PublicRoute';
 
 export function Routers() {
   const { user, isLogged } = useAuth();
+  const { currentCompanyId } = useCompany();
 
-  const notFoundRedirectPagePath = notFoundRedirectPath(user, isLogged);
+  const notFoundRedirectPagePath = notFoundRedirectPath({
+    user,
+    isLogged,
+    currentCompanyId,
+  });
 
   return (
     <>
@@ -47,12 +53,12 @@ export function Routers() {
             <Route element={<SignUpUserPage />} path="users/register" />
           </Route>
 
-          <Route element={<CompanyAdminRoute />} path="client/admin">
+          <Route element={<CompanyAdminRoute />} path="client/:company_id/admin">
             <Route element={<SignUpUserPage />} path="users/register" />
           </Route>
 
-          <Route element={<CompanyGeralRoute />} path="client">
-            <Route element={<Home />} path="dashboard" />
+          <Route element={<CompanyGeralRoute />} path="client/:company_id">
+            <Route element={<ClientDashboardPage />} path="dashboard" />
 
             <Route
               element={

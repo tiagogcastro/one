@@ -7,6 +7,7 @@ import { AuthProvider } from './context';
 import { AppRouter } from './routes';
 import GlobalStyles from './styles/global';
 import light from './styles/themes/light';
+import { CompanyProvider } from './context/company/CompanyContext';
 
 function App() {
   return (
@@ -16,7 +17,9 @@ function App() {
         <ThemeProvider theme={light}>
           <ToastContainer />
 
-          <AppRouter />
+          <CompanyProvider>
+            <AppRouter />
+          </CompanyProvider>
         </ThemeProvider>
       </AuthProvider>
     </>

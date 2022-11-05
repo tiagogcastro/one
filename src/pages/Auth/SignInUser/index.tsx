@@ -20,6 +20,7 @@ import { Input } from '../../../components/Forms/Input';
 import { InputPassword } from '../../../components/Forms/InputPassword';
 import { SignInData } from '../../../context';
 import { useAuth } from '../../../hooks/useAuth';
+import { useCompany } from '../../../hooks/useCompany';
 
 const signInFormSchema = Yup.object().shape({
   email: Yup.string()
@@ -31,6 +32,7 @@ const signInFormSchema = Yup.object().shape({
 export function SignInUserPage() {
   const navigateTo = useNavigate();
   const { signIn } = useAuth();
+  const { currentCompanyId } = useCompany();
 
   const { formState, handleSubmit, register } = useForm<SignInData>({
     resolver: yupResolver(signInFormSchema),
@@ -38,10 +40,14 @@ export function SignInUserPage() {
 
   const signInErrors = formState.errors;
 
+  const clientNavigateTo = currentCompanyId
+    ? `/client/${currentCompanyId}/dashboard`
+    : '/profile';
+
   const handleSignIn: SubmitHandler<SignInData> = async (data) => {
     await signIn(data);
 
-    navigateTo('/client/dashboard');
+    navigateTo(`${clientNavigateTo}`);
   };
 
   return (
