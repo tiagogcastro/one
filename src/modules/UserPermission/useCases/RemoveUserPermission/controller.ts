@@ -4,7 +4,6 @@ import { findByRole } from 'src/modules/Roles/repositories/role-repositories';
 import { findById } from 'src/modules/User/repositories/user-repositories';
 import { findUserRoleByRoleIdAndUserId } from 'src/modules/User/repositories/user-role-repositories';
 import { prisma } from 'src/shared/infra/prisma/client';
-import { findUserPermissionByIds } from '../../repositories/user-permission-repositories';
 
 export class RemoveUserPermissionController {
   public async handle({ request, response }: HttpContextContract) {
@@ -70,7 +69,7 @@ export class RemoveUserPermissionController {
         throw new Error('This user permission from this company does not exist');
       }
 
-      if(!userAdminRole || !userIsAdminCompanyRole && userCompany?.companyId !== company_id) {
+      if(!userAdminRole && !userIsAdminCompanyRole && !userCompany) {
         throw new Error('Você não tem permissão para remover esta permissão do usuário.');
       }
 

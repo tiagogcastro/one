@@ -2,14 +2,19 @@ import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { findByRole } from 'src/modules/Roles/repositories/role-repositories';
 import { findUserRoleByRoleIdAndUserId } from 'src/modules/User/repositories/user-role-repositories';
 import { prisma } from 'src/shared/infra/prisma/client';
+import { userInstanceToInstance } from 'src/shared/utils/instanceToInstance';
 
 export class ListUserFromCompanyController {
   public async handle({ request, response }: HttpContextContract) {
     const userLoggedId = request.user.id;
 
-    const { company_id } = request.all();
+    const { company_id } = request.qs();
 
     try {
+      if(!company_id) {
+        throw new Error('Please, insert a company_id');
+      }
+
       const adminRole = await findByRole('admin');
 
       if (!adminRole) {
@@ -45,14 +50,11 @@ export class ListUserFromCompanyController {
         throw new Error('You cannot list users from this company');
       }
       
-      const users = await prisma.userCompany.findMany({
+      const foundUsers = await prisma.userCompany.findMany({
         where: {
           companyId: company_id,
         },
-        select: {
-          companyId: true,
-          created_at: true,
-          updated_at: true,
+        include: {
           user: {
             include: {
               UserPermission: {
@@ -73,9 +75,13 @@ export class ListUserFromCompanyController {
         }
       });
 
-      return response.status(201).json({
-        users,
-      });
+      const users = foundUsers.map(user => {
+        return {
+          ...user.user,
+        }
+      })
+
+      return response.status(201).json(userInstanceToInstance(users));
     } catch (error) {
       return response.status(403).json({error: error.message});
     }

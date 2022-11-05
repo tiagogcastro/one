@@ -4,7 +4,6 @@ import { findByRole } from 'src/modules/Roles/repositories/role-repositories';
 import { findById } from 'src/modules/User/repositories/user-repositories';
 import { findUserRoleByRoleIdAndUserId } from 'src/modules/User/repositories/user-role-repositories';
 import { prisma } from 'src/shared/infra/prisma/client';
-import { findUserPermissionByIds } from '../../repositories/user-permission-repositories';
 
 export class CreateUserPermissionController {
   public async handle({ request, response }: HttpContextContract) {

@@ -64,7 +64,7 @@ export class CreateUserCompanyController {
         throw new Error('This user is already in this company');
       }
 
-      if(!userAdminRole || !userIsAdminCompanyRole) {
+      if(!userAdminRole && !userIsAdminCompanyRole) {
         throw new Error('You cannot add this user to this company');
       }
 
