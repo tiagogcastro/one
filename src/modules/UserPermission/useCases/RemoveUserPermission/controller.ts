@@ -47,7 +47,7 @@ export class RemoveUserPermissionController {
   
       const userCompany = await prisma.userCompany.findFirst({
         where: {
-          userId: userLoggedId,
+          userId: user_id,
         },
       });
 
