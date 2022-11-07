@@ -54,7 +54,7 @@ export function EquipamentsContainer({ company_id }: EquipamentsContainerProps) 
 
   useEffect(() => {
     getEquipaments();
-  }, []);
+  }, [company_id]);
 
   if (!equipaments) {
     return <>Loading...</>;
