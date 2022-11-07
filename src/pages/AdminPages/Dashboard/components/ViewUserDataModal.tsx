@@ -2,7 +2,7 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
-import { nouApi, UserData } from '../../../../services';
+import { nouApi, nouApiStorageKey, UserData } from '../../../../services';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { Input } from '../../../../components/Forms/Input';
@@ -11,6 +11,8 @@ import * as Yup from 'yup';
 import { toast } from 'react-toastify';
 import { apiError } from '../../../../utils/formatApiError';
 import { useUsersList } from '../../../../hooks/useUsersList';
+import { SignInResponseData } from '../../../../context';
+import { useAuth } from '../../../../hooks/useAuth';
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -52,7 +54,9 @@ export default function ViewUserDataModal({
   handleClose,
   isOpen,
 }: ViewUserDataModalProps) {
-  const { setUsers, setCurrentUserData, currentUserData: user } = useUsersList();
+  const { setUser } = useAuth();
+
+  const { setUsers, currentUserData: user } = useUsersList();
 
   const { formState, handleSubmit, register } = useForm<UpdateUserData>({
     resolver: yupResolver(updateUserSchema),
@@ -180,6 +184,42 @@ export default function ViewUserDataModal({
     }
   }
 
+  async function handleEnterAccount() {
+    try {
+      const response = await nouApi.post<SignInResponseData>(
+        '/users/admin/view-as-client',
+        {
+          email: user?.email,
+        },
+      );
+
+      const { token, user: userResult } = response.data;
+
+      nouApi.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+
+      localStorage.setItem(nouApiStorageKey, token);
+      setUser(userResult);
+
+      toast.success('Sucesso! Você entrou na conta de um usuário', {
+        style: {
+          background: '#222222',
+        },
+      });
+
+      window.location.reload();
+    } catch (error: any) {
+      const errors = apiError(error);
+
+      errors.messages.forEach((message) => {
+        toast.error(message, {
+          style: {
+            background: '#222222',
+          },
+        });
+      });
+    }
+  }
+
   if (!user) {
     return (
       <Modal
@@ -208,15 +248,26 @@ export default function ViewUserDataModal({
             <Typography id="modal-modal-title" variant="h4" component="h2">
               Informações do usuário
             </Typography>
-            <Button
-              variant="contained"
-              color="error"
-              size="small"
-              sx={{ p: 0, width: '160px' }}
-              onClick={handleDeleteAccount}
-            >
-              Deletar conta
-            </Button>
+            <Box display="flex" gap={2}>
+              <Button
+                variant="contained"
+                color="error"
+                size="small"
+                sx={{ p: 0, width: '160px' }}
+                onClick={handleDeleteAccount}
+              >
+                Deletar conta
+              </Button>
+              <Button
+                variant="contained"
+                color="primary"
+                size="small"
+                sx={{ p: 0, width: '160px' }}
+                onClick={handleEnterAccount}
+              >
+                Entrar na conta
+              </Button>
+            </Box>
             <Box position="absolute" top="0" right="0">
               <Button sx={{ p: 1, display: 'block' }} onClick={handleClose}>
                 <AiOutlineClose />

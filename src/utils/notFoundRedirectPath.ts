@@ -1,4 +1,5 @@
 import { UserData } from '../services';
+import { getUserValidations } from './validationUser';
 
 interface Props {
   user: UserData | null;
@@ -9,27 +10,21 @@ interface Props {
 export function notFoundRedirectPath({ user, isLogged, currentCompanyId }: Props) {
   let notFoundRedirectPagePath = '/';
 
-  const isCompanyAdmin = user?.UserRole.find((where) => {
-    return where.role.role === 'company.admin';
-  });
+  const { isUserAdmin, isUserCompanyAdmin } = getUserValidations(user);
 
-  const isAdmin = user?.UserRole.find((where) => {
-    return where.role.role === 'admin';
-  });
-
-  const itsPartOfTheCompany = user?.UserCompany.find(
-    (where) => where.companyId === currentCompanyId,
-  );
+  const itsPartOfTheCompany = user?.UserCompany
+    ? !!user?.UserCompany.find((where) => where.companyId === currentCompanyId)
+    : false;
 
   if (!isLogged) {
     return '/login';
   }
 
-  if (isAdmin) {
+  if (isUserAdmin) {
     return '/admin/dashboard';
   }
 
-  if (isCompanyAdmin && !isAdmin) {
+  if (isUserCompanyAdmin && !isUserAdmin) {
     return `/profile`;
   }
 

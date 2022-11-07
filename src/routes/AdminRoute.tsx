@@ -6,7 +6,7 @@ export type AdminRouteProps = {
   redirect_to?: string;
 };
 
-export function AdminRoute({ redirect_to = '/client/dashboard' }: AdminRouteProps) {
+export function AdminRoute({ redirect_to = '/profile' }: AdminRouteProps) {
   const { isUserAdmin } = useAuth();
 
   if (!isUserAdmin) {

@@ -5,6 +5,7 @@ import * as Yup from 'yup';
 import { nouApiStorageKey, UserData } from '../../services';
 import { nouApi } from '../../services/clientApi';
 import { apiError } from '../../utils/formatApiError';
+import { getUserValidations } from '../../utils/validationUser';
 import {
   RegisterUserData,
   RegisterUserResponseData,
@@ -33,21 +34,6 @@ type AuthProviderProps = {
 };
 
 export const AuthContext = createContext<AuthContextData>({} as AuthContextData);
-
-export function getUserValidations(user: UserData | null) {
-  const isUserCompanyAdmin = !!user?.UserRole.find((where) => {
-    return where.role.role === 'company.admin';
-  });
-
-  const isUserAdmin = !!user?.UserRole.find((where) => {
-    return where.role.role === 'admin';
-  });
-
-  return {
-    isUserCompanyAdmin,
-    isUserAdmin,
-  };
-}
 
 export function AuthProvider({ children }: AuthProviderProps) {
   const storageToken = localStorage.getItem(nouApiStorageKey);

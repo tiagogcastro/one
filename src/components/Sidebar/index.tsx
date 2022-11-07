@@ -30,9 +30,9 @@ export function SideBar() {
 
   const clientNavigateTo = `/client/${currentCompanyId}`;
 
-  const itsPartOfTheCompany = !!user?.UserCompany.find(
-    (where) => where.companyId === currentCompanyId,
-  );
+  const itsPartOfTheCompany = user?.UserCompany
+    ? !!user?.UserCompany.find((where) => where.companyId === currentCompanyId)
+    : false;
 
   return (
     <Styles.Container>

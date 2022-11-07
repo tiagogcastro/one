@@ -51,7 +51,7 @@ export function CompanyProvider({ children }: CompanyProviderProps) {
         (where) => where.company.id === currentCompanyId,
       );
 
-      if ((companiesData.length > 0 && !currentCompanyIdStorage) || !foundCompany) {
+      if (companiesData.length > 0 && !currentCompanyIdStorage && !foundCompany) {
         setCurrentCompanyId(companiesData[0].company.id);
         setCurrentCompany(companiesData[0]);
         localStorage.setItem(currentCompanyIdStorageKey, companiesData[0].company.id);
