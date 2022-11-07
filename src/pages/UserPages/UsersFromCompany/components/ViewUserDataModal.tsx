@@ -8,8 +8,15 @@ import { useUsersFromCompanyList } from '../../../../hooks/useUsersFromCompanyLi
 import { useAuth } from '../../../../hooks/useAuth';
 import { toast } from 'react-toastify';
 import { apiError } from '../../../../utils/formatApiError';
-import { nouApi } from '../../../../services';
+import {
+  nouApi,
+  Permission,
+  UserFromCompanyData,
+  UserPermission,
+} from '../../../../services';
 import { useParams } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { InputLabel, MenuItem, Select } from '@mui/material';
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -35,6 +42,19 @@ export default function ViewUserDataModal({
   const { currentUserData: user, setUsers } = useUsersFromCompanyList();
   const { company_id } = useParams();
 
+  const [notHavePerms, setNotHavePerms] = useState<Permission[]>([]);
+
+  async function getPermissionsThatUserDoesNotHave() {
+    const response = await nouApi.get('/user-permission/list/not-have-in-company', {
+      params: {
+        user_id: user?.id,
+        company_id,
+      },
+    });
+
+    setNotHavePerms(response.data);
+  }
+
   async function handleRemovePermission(permission_name: string) {
     try {
       await nouApi.delete('/user-permission/remove', {
@@ -46,7 +66,7 @@ export default function ViewUserDataModal({
       });
 
       setUsers((prevState) => {
-        const foundUser = prevState.map((prevUser) => {
+        const foundUsers = prevState.map((prevUser) => {
           if (prevUser.id === user?.id) {
             return {
               ...prevUser,
@@ -59,8 +79,8 @@ export default function ViewUserDataModal({
           return prevUser;
         });
 
-        if (foundUser) {
-          return [...foundUser];
+        if (foundUsers) {
+          return [...foundUsers];
         }
 
         return [...prevState];
@@ -119,6 +139,46 @@ export default function ViewUserDataModal({
     }
   }
 
+  async function handleAddNewUserPerm(permission: string) {
+    try {
+      await nouApi.post<UserPermission>('/user-permission/create', {
+        permission,
+        user_id: user?.id,
+        company_id,
+      });
+
+      setNotHavePerms((prevState) => {
+        return prevState.filter((where) => {
+          return where.permission !== permission;
+        });
+      });
+
+      const foundUsers = await nouApi.get<UserFromCompanyData[]>('/user-company/list', {
+        params: {
+          company_id,
+        },
+      });
+
+      setUsers(foundUsers.data);
+
+      handleClose();
+    } catch (error) {
+      const errors = apiError(error);
+
+      errors.messages.map((message) => {
+        toast.error(message, {
+          style: {
+            background: '#222222',
+          },
+        });
+      });
+    }
+  }
+
+  useEffect(() => {
+    getPermissionsThatUserDoesNotHave();
+  }, []);
+
   if (!user) {
     return (
       <Modal
@@ -143,19 +203,41 @@ export default function ViewUserDataModal({
         aria-describedby="modal-modal-description"
       >
         <Box sx={style} position="relative" maxWidth={'1280px'} width="100%">
-          <Box display="flex" marginTop={2} gap={2}>
+          <Box display="flex" alignItems="center" marginTop={2} gap={2}>
             <Typography id="modal-modal-title" variant="h4" component="h2">
               Informações do usuário
             </Typography>
             {isUserCompanyAdmin && (
-              <Button
-                color="error"
-                variant="contained"
-                size="small"
-                onClick={() => handleRemoveUserCompany(user.id)}
-              >
-                Remover da empresa
-              </Button>
+              <Box display="flex" alignItems="center" gap={2}>
+                <Button
+                  color="error"
+                  sx={{
+                    height: 'max-content',
+                  }}
+                  variant="contained"
+                  size="small"
+                  onClick={() => handleRemoveUserCompany(user.id)}
+                >
+                  Remover da empresa
+                </Button>
+                {notHavePerms.length > 0 && (
+                  <Box>
+                    <InputLabel>Adicionar permissão</InputLabel>
+                    <Select
+                      fullWidth
+                      label="Adicionar nova permissão"
+                      value=""
+                      onChange={(e) => handleAddNewUserPerm(e.target.value as string)}
+                    >
+                      {notHavePerms.map((permission) => (
+                        <MenuItem key={permission.id} value={permission.permission}>
+                          {permission.permission}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </Box>
+                )}
+              </Box>
             )}
             <Box position="absolute" top="0" right="0">
               <Button sx={{ p: 1, display: 'block' }} onClick={handleClose}>
@@ -210,14 +292,16 @@ export default function ViewUserDataModal({
             </Box>
 
             <Box marginTop={4} width="100%">
-              <Typography
-                id="modal-modal-title"
-                variant="h6"
-                component="h2"
-                marginTop={2}
-              >
-                Permissões na empresa
-              </Typography>
+              <Box>
+                <Typography
+                  id="modal-modal-title"
+                  variant="h6"
+                  component="h2"
+                  marginTop={2}
+                >
+                  Permissões na empresa
+                </Typography>
+              </Box>
               <Box
                 display="flex"
                 flexWrap="wrap"

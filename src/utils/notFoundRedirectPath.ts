@@ -30,7 +30,7 @@ export function notFoundRedirectPath({ user, isLogged, currentCompanyId }: Props
   }
 
   if (isCompanyAdmin && !isAdmin) {
-    return `/client/${currentCompanyId}/admin/dashboard`;
+    return `/profile`;
   }
 
   if (itsPartOfTheCompany) {

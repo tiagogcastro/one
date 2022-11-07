@@ -71,7 +71,10 @@ export function EquipamentsContainer({ company_id }: EquipamentsContainerProps) 
     >
       {equipaments?.equipaments &&
         equipaments.equipaments.map((equipament) => (
-          <Link key={equipament.id} to={`/client/equipament/${equipament.id}`}>
+          <Link
+            key={equipament.id}
+            to={`/client/${company_id}/equipament/${equipament.id}`}
+          >
             <Equipament equipament={equipament} />
           </Link>
         ))}
