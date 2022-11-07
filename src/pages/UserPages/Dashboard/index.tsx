@@ -13,15 +13,16 @@ export function ClientDashboardPage() {
       <Header />
       <Box>
         <SideBar />
-        <Box
-          marginLeft={10}
-          borderRadius="40px 0 0 0"
-          bgcolor="#1A1A1B"
-          p={2}
-          height="calc(100vh - 80px)"
-          position="relative"
-        >
-          <EquipamentsContainer company_id={company_id} />
+        <Box height="calc(100vh - 80px)" bgcolor="#1A1A1B" overflow="auto">
+          <Box
+            marginLeft={10}
+            borderRadius="40px 0 0 0"
+            p={2}
+            height="auto"
+            position="relative"
+          >
+            <EquipamentsContainer company_id={company_id} />
+          </Box>
         </Box>
       </Box>
     </Box>
