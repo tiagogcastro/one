@@ -64,7 +64,7 @@ export class CreateUserPermissionController {
         throw new Error('This user has no company');
       }
 
-      if(!userAdminRole || !userIsAdminCompanyRole && userCompany?.companyId !== company_id) {
+      if(!userAdminRole && !userIsAdminCompanyRole && !userCompany) {
         throw new Error('You cannot give permission this user');
       }
 
@@ -98,14 +98,14 @@ export class CreateUserPermissionController {
           userId: userToGivePermission.id,
           companyId: company_id
         },
-        include: {
+        select: {
+          id: true,
           permission: true
         }
       });
   
       return response.status(201).json({
-        userPermission: userPermissionData,
-        userLogged,
+        permission: userPermissionData
       });
     } catch (error) {
       return response.status(403).json({error: error.message});
