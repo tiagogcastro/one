@@ -10,7 +10,6 @@ export default createGlobalStyle`
 
   html, body, #root {
     background: #222222;
-    height: 100vh;
   }
 
   body, button, input, select, textarea {

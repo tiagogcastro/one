@@ -35,6 +35,10 @@ export interface Equipament {
   hardwareId: string | null;
   updated_at: string;
   created_at: string;
+
+  posY: number;
+  posX: number;
+
   params: {
     volume: string | null | boolean | number;
     recipe_name: string | null | boolean | number;

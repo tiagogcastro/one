@@ -1,11 +1,13 @@
 import { Box } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import { Company, Equipament as EquipamentInterface } from '../../services';
 import { nouApi } from '../../services/clientApi';
 import { apiError } from '../../utils/formatApiError';
+import { DragDropItem } from '../DragDrop/Box';
+import { DragDropContainer } from '../DragDrop/Container';
 import { Equipament } from '../Equipament';
 
 export interface EquipamentsResponse {
@@ -15,9 +17,13 @@ export interface EquipamentsResponse {
 
 export interface EquipamentsContainerProps {
   company_id: string | undefined;
+  openToEditPosition: boolean;
 }
 
-export function EquipamentsContainer({ company_id }: EquipamentsContainerProps) {
+export function EquipamentsContainer({
+  company_id,
+  openToEditPosition,
+}: EquipamentsContainerProps) {
   const navigate = useNavigate();
 
   const [equipaments, setEquipaments] = useState<EquipamentsResponse | null>(null);
@@ -56,28 +62,105 @@ export function EquipamentsContainer({ company_id }: EquipamentsContainerProps) 
     getEquipaments();
   }, [company_id]);
 
+  async function updateEquipamentPositionDB(
+    equipament_id: string,
+    posY: number,
+    posX: number,
+  ) {
+    try {
+      await nouApi.put('/equipament/update', {
+        company_id,
+        equipament_id,
+        posX,
+        posY,
+      });
+
+      toast.success('Sucesso! Posição do equipamento atualizada', {
+        style: {
+          background: '#222222',
+        },
+        autoClose: 2000,
+      });
+    } catch (error) {
+      const errors = apiError(error);
+
+      errors.messages.map((message) => {
+        toast.error(message, {
+          style: {
+            background: '#222222',
+          },
+        });
+      });
+    }
+  }
+
+  const moveEquipament = useCallback(
+    async (id: string, posX: number, posY: number) => {
+      setEquipaments((prevState) => {
+        if (prevState?.equipaments) {
+          let foundItem = prevState?.equipaments.find((item) => item.id === id);
+
+          if (foundItem) {
+            foundItem = {
+              ...foundItem,
+              posX,
+              posY,
+            };
+
+            prevState.equipaments = prevState?.equipaments.filter(
+              (item) => item.id !== id,
+            );
+
+            return {
+              ...prevState,
+              equipaments: [...prevState.equipaments, foundItem],
+            };
+          }
+        }
+
+        return prevState;
+      });
+
+      await updateEquipamentPositionDB(id, posY, posX);
+    },
+    [equipaments, setEquipaments],
+  );
+
   if (!equipaments) {
     return <>Loading...</>;
   }
 
   return (
-    <Box
-      position="relative"
-      overflow="auto"
-      height="100%"
-      display="flex"
-      gap={3}
-      flexWrap="wrap"
-    >
+    <DragDropContainer moveItems={moveEquipament}>
       {equipaments?.equipaments &&
         equipaments.equipaments.map((equipament) => (
-          <Link
-            key={equipament.id}
-            to={`/client/${company_id}/equipament/${equipament.id}`}
-          >
-            <Equipament equipament={equipament} />
-          </Link>
+          <>
+            {openToEditPosition ? (
+              <DragDropItem
+                id={equipament.id}
+                posX={equipament.posX}
+                posY={equipament.posY}
+                key={equipament.id}
+              >
+                <Equipament equipament={equipament} />
+              </DragDropItem>
+            ) : (
+              <Link
+                key={equipament.id}
+                to={`/client/${company_id}/equipament/${equipament.id}`}
+              >
+                <Box
+                  position="absolute"
+                  left={equipament.posX}
+                  top={equipament.posY}
+                  data-testid="box"
+                >
+                  <Equipament equipament={equipament} />
+                </Box>
+              </Link>
+            )}
+          </>
         ))}
-    </Box>
+    </DragDropContainer>
   );
 }

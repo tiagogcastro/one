@@ -42,6 +42,7 @@ module.exports = {
     'no-unused-vars': 'off',
     'no-extra-boolean-cast': 'off',
     'jsx-a11y/tabindex-no-positive': 'off',
+    'no-undef': 'off',
     'jsx-a11y/anchor-is-valid': [
       'error',
       {
