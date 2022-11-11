@@ -79,6 +79,8 @@ export class ListEquipamentsController {
           id: equipament.id,
           name: equipament.name,
           companyAreaId: equipament.companyAreaId,
+          posY: equipament.posY,
+          posX: equipament.posX,
           hardwareId: equipament.hardwareId,
           updated_at: equipament.updated_at,
           created_at: equipament.created_at,

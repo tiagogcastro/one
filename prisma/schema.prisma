@@ -122,6 +122,8 @@ model Equipament {
   updated_at           DateTime               @default(now())
   name                 String?
   hardwareId           String?
+  posX                 Int                    @default(0)
+  posY                 Int                    @default(0)
   company              Company                @relation(fields: [companyId], references: [id])
   companyId            String
   companyArea          CompanyArea            @relation(fields: [companyAreaId], references: [id])

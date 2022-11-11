@@ -13,7 +13,7 @@ export class CreateEquipamentController {
     let companyArea: CompanyArea | null = {} as CompanyArea;
 
     try {
-      const { company_id, company_area, equipament_name, params } = request.all();
+      const { company_id, company_area, equipament_name, posY, posX, params } = request.all();
 
       const userLogged = await findById(userLoggedId);
 
@@ -137,6 +137,8 @@ export class CreateEquipamentController {
           data: {
             companyId: company_id,
             companyAreaId: companyArea.id,
+            posX,
+            posY,
             name: equipament_name,
           },
           include: {

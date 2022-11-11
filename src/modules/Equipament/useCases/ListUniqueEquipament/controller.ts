@@ -86,6 +86,8 @@ export class ListUniqueEquipamentController {
         id: foundEquipament.id,
         name: foundEquipament.name,
         companyAreaId: foundEquipament.companyAreaId,
+        posY: foundEquipament.posY,
+        posX: foundEquipament.posX,
         hardwareId: foundEquipament.hardwareId,
         updated_at: foundEquipament.updated_at,
         created_at: foundEquipament.created_at,

@@ -13,7 +13,7 @@ export class UpdateEquipamentController {
     let equipament: Equipament | null = {} as Equipament;
    
     try {
-      const { company_id, equipament_id, equipament_name, params } = request.all();
+      const { company_id, equipament_id, equipament_name, posX, posY, params } = request.all();
 
       const userLogged = await findById(userLoggedId);
 
@@ -65,7 +65,7 @@ export class UpdateEquipamentController {
         throw new Error('Please enter equipament_id');
       }
 
-      const isRequiredValues = Object.entries(params).map(([prop]: [string, string]) => {
+      const isRequiredValues = params && Object.entries(params).map(([prop]: [string, string]) => {
         if(prop === "temperature" && typeof params[prop] !== "number") {
           return `Please enter a number value params on params.${prop}`
         }
@@ -83,7 +83,7 @@ export class UpdateEquipamentController {
         }
       }).filter(Boolean);
       
-      if(isRequiredValues.length > 0) {
+      if(isRequiredValues && isRequiredValues.length > 0) {
         return {
           error: isRequiredValues
         }
@@ -101,7 +101,9 @@ export class UpdateEquipamentController {
 
       equipament = {
         ...equipament,
-        name: equipament_name || equipament.name
+        name: equipament_name || equipament.name,
+        posY: posY || equipament.posY,
+        posX: posX || equipament.posX,
       };
 
       equipament = await prisma.equipament.update({
@@ -121,28 +123,30 @@ export class UpdateEquipamentController {
         }
       });
 
-      const defaultEquipamentParams = Object.entries(params).map(async ([key, value]: [string, string]) => {
-        const founded = foundEquipamentsParams.find(foundParam => foundParam.name === key);
+      if(params) {
+        const defaultEquipamentParams = Object.entries(params).map(async ([key, value]: [string, string]) => {
+          const founded = foundEquipamentsParams.find(foundParam => foundParam.name === key);
 
-        if(founded) {
-          const result = await prisma.equipamentParameters.update({
-            data: {
-              ...founded,
-              value: value ? String(value) : founded.value,
-              type: value ? typeof value : founded.type, 
-            },
-            where: {
-              id: founded.id
+          if(founded) {
+            const result = await prisma.equipamentParameters.update({
+              data: {
+                ...founded,
+                value: value ? String(value) : founded.value,
+                type: value ? typeof value : founded.type, 
+              },
+              where: {
+                id: founded.id
+              }
+            });
+
+            return {
+              [result.name]: returnValueConverted(result.value, result.type as any),
             }
-          });
-
-          return {
-            [result.name]: returnValueConverted(result.value, result.type as any),
           }
-        }
-      }).filter(Boolean);
+        }).filter(Boolean);
 
-      await Promise.all(defaultEquipamentParams);
+        await Promise.all(defaultEquipamentParams);
+      }
 
       foundEquipamentsParams = await prisma.equipamentParameters.findMany({
         where: {
