@@ -22,6 +22,9 @@
 # install dependencies
 $ npm install
 
+# Run batabase using docker
+$ docker compose up -d
+
 # install dependencies
 $ npm run prisma migrate dev
 # or
