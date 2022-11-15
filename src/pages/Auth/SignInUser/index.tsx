@@ -103,7 +103,7 @@ export function SignInUserPage() {
             />
           </Box>
 
-          <Grid container>
+          {/* <Grid container>
             <Grid item xs>
               <Link
                 color="#D79600"
@@ -136,7 +136,7 @@ export function SignInUserPage() {
                 Criar conta
               </Link>
             </Grid>
-          </Grid>
+          </Grid> */}
         </Stack>
       </Stack>
     </Fade>
