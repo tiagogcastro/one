@@ -11,6 +11,14 @@ export class DeleteEquipamentController {
     try {
       const { company_id, equipament_id } = request.qs();
 
+      if(!company_id) {
+        throw new Error('Please, enter company_id');
+      }
+
+      if(!equipament_id) {
+        throw new Error('Please enter equipament_id');
+      }
+
       const userLogged = await findById(userLoggedId);
 
       if (!userLogged) { 
@@ -27,10 +35,6 @@ export class DeleteEquipamentController {
 
       if(!isCompanyAdminRole) {
         throw new Error('company.admin Role does not exist');
-      }
-
-      if(!company_id) {
-        throw new Error('Please enter company_id');
       }
 
       const userAdminRole = await findUserRoleByRoleIdAndUserId(adminRole.id, userLoggedId);

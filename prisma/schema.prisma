@@ -108,7 +108,7 @@ model CompanyArea {
   id         String       @id @default(uuid())
   created_at DateTime     @default(now())
   updated_at DateTime     @default(now())
-  company    Company      @relation(fields: [companyId], references: [id])
+  company    Company      @relation(fields: [companyId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   companyId  String
   name       String
   Equipament Equipament[]
@@ -124,9 +124,9 @@ model Equipament {
   hardwareId           String?
   posX                 Int                    @default(0)
   posY                 Int                    @default(0)
-  company              Company                @relation(fields: [companyId], references: [id])
+  company              Company                @relation(fields: [companyId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   companyId            String
-  companyArea          CompanyArea            @relation(fields: [companyAreaId], references: [id])
+  companyArea          CompanyArea            @relation(fields: [companyAreaId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   companyAreaId        String
   EquipamentParameters EquipamentParameters[]
 
@@ -137,7 +137,7 @@ model EquipamentParameters {
   id           String     @id @default(uuid())
   created_at   DateTime   @default(now())
   updated_at   DateTime   @default(now())
-  equipament   Equipament @relation(fields: [equipamentId], references: [id])
+  equipament   Equipament @relation(fields: [equipamentId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   equipamentId String
   name         String
   value        String

@@ -3,6 +3,14 @@ import bcrypt from 'bcrypt';
 import { findByEmail } from 'src/modules/User/repositories/user-repositories'
 import { findByRole } from 'src/modules/Roles/repositories/role-repositories'
 
+let adminData = {
+  email: process.env.NOU_ADMIN_EMAIL || 'nouAdmin001api@gmail.com',
+  password: process.env.NOU_ADMIN_PASSWORD || 'nouAdmin001apiPassword',
+  name: process.env.NOU_ADMIN_NAME || 'nouAdmin',
+  lastname: process.env.NOU_ADMIN_LASTNAME || 'lastname',
+  username: process.env.NOU_ADMIN_USERNAME || 'nouAdminUsername',
+};
+
 export async function startPrismaDB() {
   try {
     const permissionsDefault = ['edit.setpoint', 'edit.status', 'edit.config', 'manual', 'auto'];
@@ -19,26 +27,25 @@ export async function startPrismaDB() {
       }
     });
 
-    const foundUser = await findByEmail('admin@admin.com');
+    const foundUser = await findByEmail(adminData.email);
 
     if(foundUser) {
       return;
     }
 
-    const passwordHashed = await bcrypt.hash('admin', 10);
+    const passwordHashed = await bcrypt.hash(adminData.password, 10);
 
     if(!passwordHashed) {
       throw new Error("Cannot hash password");
     }
+
+    adminData = {
+      ...adminData,
+      password: passwordHashed
+    };
     
     const user = await prisma.user.create({
-      data: {
-        email: 'admin@admin.com',
-        password: passwordHashed,
-        username: 'admin',
-        name: 'admin1',
-        lastname:'admin2',
-      }
+      data: adminData
     });
 
     const foundAdminRole = await findByRole('admin');

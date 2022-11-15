@@ -148,6 +148,15 @@ export class CreateUserService {
       });
     }
 
+    if(!data.company?.name || !data.company.id) {
+      user = await prisma.user.create({
+        data: {
+          ...userData,
+          password: passwordHashed
+        }
+      });
+    }
+
     await prisma.userRole.create({
       data: {
         userId: user.id,

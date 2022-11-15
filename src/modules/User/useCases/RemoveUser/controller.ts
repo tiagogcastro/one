@@ -10,7 +10,7 @@ export class RemoveUserController {
     const userIdToDelete = request.qs().user_id as string;
 
     try {
-      const userToDelete = await findById(userIdToDelete);
+      const userToDelete = await findById(userIdToDelete || userLoggedId);
 
       if (!userToDelete) {
         throw new Error('User not found');
@@ -24,7 +24,7 @@ export class RemoveUserController {
 
       const userRole = await findUserRoleByRoleIdAndUserId(adminRole.id, userLoggedId);
 
-      if (!userRole) {
+      if (!userRole && userIdToDelete) {
         throw new Error('Cannot delete user');
       }
 
