@@ -9,9 +9,9 @@ services:
     volumes:
       - 'postgresql_data:/var/lib/postgresql'
     environment:
-      - POSTGRES_USER=nou
-      - POSTGRES_PASSWORD=nou
-      - POSTGRES_DATABASE=nou
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DATABASE=${POSTGRES_DATABASE}
     networks:
       - app-net
 

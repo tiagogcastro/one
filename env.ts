@@ -15,20 +15,16 @@
 import Env from '@ioc:Adonis/Core/Env'
 
 export default Env.rules({
-  HOST: Env.schema.string({ format: 'host' }),
-  PORT: Env.schema.number(),
-  APP_KEY: Env.schema.string(),
-  APP_NAME: Env.schema.string(),
-  APP_URL: Env.schema.string(),
-  PG_HOST: Env.schema.string({ format: 'host' }),
-  PG_PORT: Env.schema.number(),
-  PG_USER: Env.schema.string(),
-  PG_PASSWORD: Env.schema.string.optional(),
-  PG_DB_NAME: Env.schema.string(),
-  SMTP_HOST: Env.schema.string({ format: 'host' }),
-  SMTP_PORT: Env.schema.number(),
-  SMTP_USERNAME: Env.schema.string(),
-  SMTP_PASSWORD: Env.schema.string(),
-  DEFAULT_FROM_EMAIL: Env.schema.string(),
-  NODE_ENV: Env.schema.enum(['development', 'production', 'testing'] as const),
+  DATABASE_URL: Env.schema.string(),
+  POSTGRES_HOST: Env.schema.string({ format: 'host' }),
+  POSTGRES_PORT: Env.schema.number(),
+  POSTGRES_USER: Env.schema.string(),
+  POSTGRES_PASSWORD: Env.schema.string(),
+  POSTGRES_DATABASE: Env.schema.string(),
+
+  NOU_ADMIN_EMAIL: Env.schema.string(),
+  NOU_ADMIN_PASSWORD: Env.schema.string(),
+  NOU_ADMIN_NAME: Env.schema.string(),
+  NOU_ADMIN_LASTNAME: Env.schema.string(),
+  NOU_ADMIN_USERNAME: Env.schema.string(),
 })

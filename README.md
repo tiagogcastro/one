@@ -23,17 +23,17 @@
 $ npm install
 
 # Run batabase using docker
-$ docker compose up -d
+$ docker compose --env-file .env up -d
 
 # install dependencies
 $ npm run prisma migrate dev
 # or
 $ yarn prisma migrate dev
 
-# serve on localhost:3333
- $ npm run dev
+# serve on localhost
+$ npm run dev
 # or
- $ yarn dev
+$ yarn dev
 
 # build for production and launch server
 $ npm build
