@@ -19,23 +19,23 @@
 ## Build Setup
 
 ```bash
-# install dependencies
+# 1 - install dependencies
 $ npm install
 
-# Run batabase using docker
+# 2 - Envs
+- Copy file .env.example and rename to .env
+- Change environments values
+
+# 3 - Run batabase using docker
 $ docker compose --env-file .env up -d
 
-# install dependencies
+# 4 - install dependencies
 $ npm run prisma migrate dev
 # or
 $ yarn prisma migrate dev
 
-# serve on localhost
+# 5 - serve on localhost
 $ npm run dev
 # or
 $ yarn dev
-
-# build for production and launch server
-$ npm build
-$ npm start
 ```
