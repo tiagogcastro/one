@@ -21,7 +21,7 @@ model User {
   avatar            String?
   email_verified_at String?
   remember_me_token String?
-  is_activated      Boolean          @default(false)
+  is_activated      Boolean          @default(true)
   password          String
   UserRole          UserRole[]
   UserPermission    UserPermission[]
