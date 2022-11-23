@@ -1,5 +1,7 @@
 FROM node:16.17
 
+RUN mkdir /one-api
+VOLUME /one-api
 WORKDIR /one-api
 
 ENV PORT 8080
