@@ -10,12 +10,6 @@
     "outDir": "build",
     "module": "commonjs",
     "noImplicitReturns": false,
-    "noUnusedLocals": true,
-    "sourceMap": false,
-    "strict": false,
-    "skipLibCheck": true,
-    "noEmit": true,
-    "noLib": true,
     "target": "es2017",
     "paths": {
       "App/*": [
