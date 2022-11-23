@@ -4,7 +4,7 @@
     "private": true,
     "main": "server.js",
     "scripts": {
-        "build": "node ace build --production",
+        "build": "node ace build --ignore-ts-errors",
         "start": "node build/server.js",
         "dev": "node ace serve --watch",
         "lint": "eslint . --ext=.ts",

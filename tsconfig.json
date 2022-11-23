@@ -4,13 +4,16 @@
     "**/*"
   ],
   "exclude": [
-    "node_modules",
-    "build"
+    "node_modules"
   ],
   "compilerOptions": {
     "outDir": "build",
-    "rootDir": "./",
-    "sourceMap": true,
+    "module": "commonjs",
+    "noImplicitReturns": false,
+    "noUnusedLocals": true,
+    "sourceMap": false,
+    "strict": false,
+    "target": "es2017",
     "paths": {
       "App/*": [
         "./app/*"
