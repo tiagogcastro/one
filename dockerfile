@@ -10,6 +10,10 @@ ENV HOST 0.0.0.0
 COPY package*.json ./
 RUN npm install
 COPY . .
+
+RUN npm cache clean
+RUN npm install -g reflect-metadata
+
 RUN npm run build
 
 CMD docker compose --env-file .env up -d
