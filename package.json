@@ -10,7 +10,8 @@
         "lint": "eslint . --ext=.ts",
         "format": "prettier --write .",
         "adonisMigrateRun": "node ace migration:run",
-        "prisma": "prisma"
+        "prisma": "prisma",
+        "docker": "docker"
     },
     "devDependencies": {
         "@adonisjs/assembler": "^5.3.5",
