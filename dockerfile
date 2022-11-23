@@ -2,12 +2,15 @@ FROM node:16.17
 
 WORKDIR /one-api
 
-COPY package*.json .
+ENV PORT 8080
+ENV HOST 0.0.0.0
+
+COPY package*.json ./
 RUN npm install
 COPY . .
-CMD npm build
+RUN npm run build
 
 CMD docker compose --env-file .env up -d
-CMD npm run prisma migrate dev
+RUN npm run prisma migrate dev
 
 CMD npm start
