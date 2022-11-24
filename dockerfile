@@ -2,7 +2,7 @@ FROM node:alpine
 
 WORKDIR /one-api
 
-ENV DATABASE_URL=postgres://cloudsql/nou-one:us-central1:one-api
+ENV DATABASE_URL=postgres://nou-one-api:nou-one-api@localhost:5432/one-db?host=/cloudsql/nou-one:us-central1:one-api
 
 COPY package*.json ./
 RUN npm install
