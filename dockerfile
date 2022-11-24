@@ -2,7 +2,7 @@ FROM node:alpine
 
 WORKDIR /one-api
 
-ENV DATABASE_URL=postgres://nou-one-api:nou-one-api@gcp-sa-cloud-sql.iam.gserviceaccount.com/one-db
+ENV DATABASE_URL=/cloudsql/nou-one:us-central1:one-api
 
 COPY package*.json ./
 RUN npm install
