@@ -12,6 +12,6 @@ RUN npm run build
 
 RUN echo "docker-compose --env-file .env up -d"
 RUN ["npm", "run", "prisma", "generate"]
-RUN ["npm", "run", "prisma", "migrate", "dev"]
+RUN ["npm", "run", "prisma", "migrate", "deploy"]
 
 CMD ["npm", "start"]
