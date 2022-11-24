@@ -12,6 +12,8 @@ EXPOSE 8080
 
 RUN npm run build
 
+RUN chown node .env
+ 
 RUN echo "docker-compose --env-file .env up -d"
 RUN ["npm", "run", "prisma", "migrate", "deploy"]
 RUN ["npm", "run", "prisma", "generate"]
