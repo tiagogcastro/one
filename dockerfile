@@ -5,8 +5,8 @@ WORKDIR /one-api
 ENV DATABASE_URL=postgres://tg-db:tgdb1@34.170.169.172:5432/one-db
 
 COPY package*.json ./
-RUN npm install
-COPY . .
+RUN npm install --production
+COPY . ./
 
 EXPOSE 8080
 
