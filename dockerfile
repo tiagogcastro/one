@@ -2,8 +2,6 @@ FROM node:alpine
 
 WORKDIR /one-api
 
-ENV DATABASE_URL=postgres://tg-db:tgdb1@34.170.169.172:5432/one-db
-
 COPY package*.json ./
 RUN npm install -g npm@latest
 RUN npm install
