@@ -16,15 +16,7 @@
   },
   "preloads": [
     "./src/shared/infra/http/start/router",
-    "./src/shared/infra/http/start/kernel",
-    {
-      "file": "./src/shared/infra/http/start/events",
-      "environment": [
-        "console",
-        "repl",
-        "web"
-      ]
-    }
+    "./src/shared/infra/http/start/kernel"
   ],
   "providers": [
     "./src/shared/providers/AppProvider",
